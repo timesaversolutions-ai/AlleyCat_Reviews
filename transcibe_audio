@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Replace these variables with your actual values
+API_URL="https://api.openai.com/v1/audio/transcriptions"
+API_KEY="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"
+AUDIO_FILE_PATH="C:/Users/18043/Documents/TSS/review1_audio.mp4"
+
+# Function to upload the file and get the transcription
+transcribe_audio() {
+  response=$(curl -X POST "$API_URL" \
+      -H "Authorization: Bearer $API_KEY" \
+      -H "Content-Type: multipart/form-data" \
+      -F model="whisper-1" \
+      -F "file=@$AUDIO_FILE_PATH")
+
+  echo "Transcription response: $text"
+}
+
+# Call the function
+transcribe_audio
