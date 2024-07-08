@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "googleapis": "^140.0.1",
+    "openai": "^4.52.3"
+  }
+}
