@@ -2,7 +2,7 @@ const fs = require('fs');
 const { google } = require('googleapis');
 
 // Load client secrets from a local file
-const CREDENTIALS_PATH = 'path/to/credentials.json'; // Replace with the path to your credentials file
+const CREDENTIALS_PATH = 'D:\TimeSaver Solutions\CS work\TSS\AlleyCat_Reviews\credentials.json'; // Replace with the path to your credentials file
 const TOKEN_PATH = 'token.json';
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 

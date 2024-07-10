@@ -25,8 +25,8 @@ function writeFile(filePath, content) {
 
 async function main() {
   try {
-    const transcriptionFile = 'response.json'; // Input file
-    const outputFile = 'excel_data.json'; // Output file
+    const transcriptionFile = 'response2.json'; // Input file
+    const outputFile = 'excel_data2.json'; // Output file
 
     // Read the transcription file
     const transcriptionData = readFile(transcriptionFile);
@@ -34,7 +34,7 @@ async function main() {
 
     // Create the prompt
     const prompt = {
-      model: "gpt-4",
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
@@ -42,7 +42,7 @@ async function main() {
         },
         {
           role: "user",
-          content: `Can you help me enter this transcripted message as data for my excel sheet? Message: ${transcriptionText}`
+          content: `Can you help me enter this transcripted message as json data? Message: ${transcriptionText}. `
         }
       ]
     };

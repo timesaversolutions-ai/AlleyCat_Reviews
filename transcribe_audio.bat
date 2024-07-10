@@ -1,7 +1,7 @@
 @echo off
 set API_URL=https://api.openai.com/v1/audio/transcriptions
 set API_KEY=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
-set AUDIO_FILE_PATH="D:\TimeSaver Solutions\CS work\TSS\AlleyCat_Reviews\review2_audio.mp4"
+set AUDIO_FILE_PATH="C:\Users\deepm\Documents\AlleyCat_Reviews\review2_audio.mp4"
 set RESPONSE_FILE="response2.json"
 
 curl -X POST %API_URL% ^
