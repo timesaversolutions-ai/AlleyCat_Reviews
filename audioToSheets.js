@@ -4,6 +4,7 @@ const COMPLETIONS_API_URL = 'https://api.openai.com/v1/chat/completions';
 const FOLDER_ID = '1kweeXFwclO3dXF5yJATlhLtG1206Ijdf';
 const SPREADSHEET_ID = '1YYj8oqUT0dlJrXOC1PeYj06knozwTMD8ASO0EuZ58fs';
 const SHEET_NAME = 'Sheet1';
+// langchain key: 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
 
 function watchFolder() {
   Logger.log('Starting watchFolder function...');
