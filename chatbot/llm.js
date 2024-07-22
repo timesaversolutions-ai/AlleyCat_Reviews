@@ -1,3 +1,13 @@
+// MVP goal: Bot is prepped to deliver each of the categories from Instructors as Innovators
+// Simulation, Critique, Teach, Co-Create, Mentor and Coach, Tutor
+// Users first interaction with the bot will lead with  intention to assist as a tutor in formats ^
+// Will also prompt user for basic information about why it's using the service
+// Starter info from Bot
+// 
+// 2 gates for the user: 
+// 1 - Providing context about why they're using service
+// 2 - Choosing which type of help they want
+
 import { ChatOpenAI } from "@langchain/openai";
 
 import * as dotenv from "dotenv";
@@ -22,3 +32,4 @@ console.log(response); // for model.invoke and model.batch
 // for await (const chunk of response) { 
 //     console.log(chunk?.content);
 // }
+
