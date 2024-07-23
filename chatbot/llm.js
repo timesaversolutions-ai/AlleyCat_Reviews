@@ -8,13 +8,16 @@
 // 1 - Providing context about why they're using service
 // 2 - Choosing which type of help they want
 
+// how to add chat history: https://python.langchain.com/v0.1/docs/use_cases/question_answering/chat_history/
+
 import { ChatOpenAI } from "@langchain/openai";
+import { ChatPromptTemplate } from "@langchain/core/prompts"
 
 import * as dotenv from "dotenv";
 dotenv.config();
-
+// full options: https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html
 const model = new ChatOpenAI({
-    modelName: "gpt-3.5-turbo" // full options: https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html
+    modelName: "gpt-3.5-turbo" 
 });
 
 const messages = [
@@ -32,4 +35,3 @@ console.log(response); // for model.invoke and model.batch
 // for await (const chunk of response) { 
 //     console.log(chunk?.content);
 // }
-
