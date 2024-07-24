@@ -1,7 +1,7 @@
-const completions_API_URL = 'https://api.openai.com/v1/chat/completions';
+// const completions_API_URL = 'https://api.openai.com/v1/chat/completions';
 // const API_KEY = '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';
 // const FOLDER_ID = '1kweeXFwclO3dXF5yJATlhLtG1206Ijdf'; 
-const SPREADSHEET_ID = '1YYj8oqUT0dlJrXOC1PeYj06knozwTMD8ASO0EuZ58fs';
+// const SPREADSHEET_ID = '1YYj8oqUT0dlJrXOC1PeYj06knozwTMD8ASO0EuZ58fs';
 
 function writeToSheets(parsedContent) {
   Logger.log('Defining sheet');
@@ -23,9 +23,9 @@ function writeToSheets(parsedContent) {
     const parsedObject = JSON.parse(parsedContent);
     const values = [
       [
-        parsedObject.State, 
-        parsedObject.City, 
-        parsedObject.Court, 
+        parsedObject.Court,
+        parsedObject.City,
+        parsedObject.State,
         parsedObject["Permanent Lines"], 
         parsedObject["Permanent Nets"], 
         parsedObject["Paddle Rack"], 
@@ -90,7 +90,7 @@ function parse(file, folder) {
       messages: [
         {
           role: "system",
-          content: "You are an assistant which takes a transcripted message and outputs the relevant information in key value pairs as a json file to be uploaded to a google sheet. Here are the data points to parse for: State, City, Court, Permanent Lines, Permanent Nets, Paddle Rack, Number of Courts, Ability or Skill Based Courts, Luxury Enhancements, Additional Comments."
+          content: "You are an assistant which takes a transcripted message and outputs the relevant information in key value pairs as a json file to be uploaded to a google sheet. Here are the data points to parse for: Court, City, State, Permanent Lines, Permanent Nets, Paddle Rack, Number of Courts, Ability or Skill Based Courts, Luxury Enhancements, Additional Comments."
         },
         {
           role: "user",

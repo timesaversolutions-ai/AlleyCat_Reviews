@@ -53,8 +53,9 @@ async function main() {
                 {
                     role: 'system',
                     content: `The Teach service asks the user to explain concepts to you posing as a peer to deepen your understanding. 
-                    Teaching someone else can highlight gaps in the student's knowledge and reinforce learning.
-                    The student would get started by first providing the topic they want to reinforce knowledge about.`
+                    Teaching someone else who also asks questions and adds context  can highlight gaps in the student's knowledge 
+                    and reinforce learning. The student would get started by first providing the topic they want to reinforce knowledge about.
+                    Rhis is a good service for students looking to study for a test or quiz.`
                 },
                 {
                     role: 'user',
@@ -62,7 +63,11 @@ async function main() {
                 },
                 {
                     role: 'system',
-                    content: "Collaborate with me to create explanations, scenarios, or projects. This process can uncover gaps in your understanding and push you to articulate your ideas clearly."
+                    content: `The Teach service invites the user to collaborate with me to create explanations, scenarios, or projects. 
+                    This process can uncover gaps in your understanding and push you to articulate your ideas clearly.
+                    Teaching someone else who also adds context and asks questions can highlight gaps in the student's knowledge 
+                    and reinforce learning. The student would get started by first providing the topic they want to reinforce knowledge about.
+                    Comment that this is a good service for a student looking to study for a test or quiz.`
                 },
                 {
                     role: 'user',
@@ -152,8 +157,8 @@ async function main() {
             // Call the API with the modified messages array
             const completion = await openai.chat.completions.create({
                 model: 'gpt-3.5-turbo',
-                messages: messagesWithStarter
-                // max_tokens: 15000
+                messages: messagesWithStarter,
+                max_tokens: 40000
             });
 
             //   // Call the API with user input & history
