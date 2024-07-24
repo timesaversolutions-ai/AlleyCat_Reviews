@@ -44,7 +44,8 @@ async function main() {
                 {
                     role: 'system',
                     content: `The Simulation service allows the user to practice their knowledge and skills in a low-stakes, simulated environment. 
-                    This helps you apply knowledge and learn from mistakes without real-world consequences.`
+                    This helps you apply knowledge and learn from mistakes without real-world consequences. 
+                    This service is good for testing the limits of your knowledge. `
                 },
                 {
                     role: 'user',
