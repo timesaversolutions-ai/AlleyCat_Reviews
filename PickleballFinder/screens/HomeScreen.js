@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, FlatList } from 'react-native';
+import { View, Text, TextInput, FlatList, Image, TouchableOpacity } from 'react-native';
 import { fetchCourts } from '../api/googleSheets';
 import { styles } from '../styles/styles';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [courts, setCourts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const getCourts = async () => {
       try {
         const data = await fetchCourts();
+        // console.log(data);
         setCourts(data);
         setLoading(false);
       } catch (error) {
@@ -22,21 +24,43 @@ const HomeScreen = () => {
     getCourts();
   }, []);
 
+  const filteredCourts = courts.filter(court =>
+    court.Court?.toLowerCase().includes(search.toLowerCase())
+  );
+
   if (loading) {
     return <Text>Loading...</Text>;
   }
 
   return (
     <View style={styles.container}>
-      <TextInput style={styles.searchBar} placeholder="Search by zip code, city, etc." />
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search by name, city, etc."
+        value={search}
+        onChangeText={setSearch}
+      />
       <FlatList
-        data={courts}
+        data={filteredCourts}
         renderItem={({ item }) => (
-          <View style={styles.courtItem}>
-            <Text>{item.name}</Text>
-            <Text>{item.city}</Text>
-            <Text>{item.distance}</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.courtItem}
+            onPress={() => navigation.navigate('CourtDetails', { ...item })}
+          >
+            {item['Court Image'] ? (
+              <Image
+                source={{ uri: item['Court Image'] }} // Use the actual image URL from Google Sheets
+                style={styles.courtImage}
+              />
+            ) : (
+              <View style={styles.placeholderImage}>
+                <Text style={styles.placeholderText}>No Image Available</Text>
+              </View>
+            )}
+            <Text>Court: {item.Court}</Text>
+            <Text>City: {item.City}</Text>
+            <Text>State: {item.State}</Text>
+          </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
       />
