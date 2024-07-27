@@ -20,7 +20,9 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   courtImage: {
-    width: '100%',
+    width: '90%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     height: 200,
     marginBottom: 10,
   },

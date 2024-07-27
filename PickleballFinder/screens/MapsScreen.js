@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { styles } from '../styles/styles';
 
 const MapsScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text>Maps Screen</Text>
-      {/* Add Map Component Here */}
-    </View>
+    <ScrollView style={styles.container}>
+      <View style={styles.placeholderImage}>
+        <Text style={styles.placeholderText}>No Image Available</Text>
+      </View>
+    </ScrollView>
   );
 };
 
