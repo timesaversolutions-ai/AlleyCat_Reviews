@@ -64,6 +64,10 @@ export const styles = StyleSheet.create({
   detailValue: {
     fontSize: 16,
   },
+  collapsibleContent: {
+    padding: 16,
+    backgroundColor: '#f0f0f0',
+  },
 });
 
 
