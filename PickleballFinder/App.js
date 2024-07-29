@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Icon from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './screens/HomeScreen';
 import MapsScreen from './screens/MapsScreen';
 import CourtDetailsScreen from './screens/CourtDetailsScreen';
@@ -23,8 +24,27 @@ function HomeStack() {
 // Define the Tab Navigator
 function TabNavigator() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeStack} />
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          if (route.name === 'Explore') {
+            iconName = 'search-outline';
+          } else if (route.name === 'Map') {
+            iconName = 'map-outline';
+          } else if (route.name === 'Profile') {
+            iconName = 'person-outline';
+          }
+
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+        tabBarShowLabel: true,
+      })}
+    >
+      <Tab.Screen name="Explore" component={HomeStack} />
       <Tab.Screen name="Map" component={MapsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
