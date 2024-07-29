@@ -4,7 +4,6 @@ const COMPLETIONS_API_URL = 'https://api.openai.com/v1/chat/completions';
 const FOLDER_ID = '1kweeXFwclO3dXF5yJATlhLtG1206Ijdf';
 const SPREADSHEET_ID = '1YYj8oqUT0dlJrXOC1PeYj06knozwTMD8ASO0EuZ58fs';
 const SHEET_NAME = 'Sheet1';
-// langchain key: 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
 
 function watchFolder() {
   Logger.log('Starting watchFolder function...');
@@ -94,9 +93,21 @@ function parseTranscription(file, folder, parsedFileName) {
       messages: [
         {
           role: "system",
-          content: "You are an assistant which takes a transcripted message and outputs the relevant information in key value pairs as a json file to be uploaded to a google sheet. Here are the data points to parse for: State, City, Court, Permanent Lines, Permanent Nets, Paddle Rack, Number of Courts, Ability or Skill Based Courts, Luxury Enhancements, Additional Comments."
+          content: `You are an assistant which takes a transcripted message and outputs the relevant information in key value pairs as a json file to be uploaded to a google sheet. Here are the data points to parse for: Court, City, State, Permanent Lines, Permanent Nets, Paddle Rack (yes or no), Number of Courts, Ability or Skill Based Courts, Premium Amenities, Additional Enhancements, Additional Comments.
+          Ability or Skill Based Courts refers to whether a court (yes or no) : separates courts by ratings of 3.0 and below (beginner) and 3.5 and up (advanced).
+          Premium Amenities are whether a court offers (yes or no): Pro Shop, Snack Bar/Restaurant, Demo Paddles, Local Pro/Lessons, Ball Machine Rental.
+          Additional Enhancements are whter a court offers (yes or no): Lights; Windscreens; Wind Flags; N/S Dividers; E/W Dividers; Restrooms; Water Fountain; Seating; Trash Recepticles; Recycling Stations; Ball Recycling; Parking; Parking visible from Courts; Defibrillator; Picnic Tables; Bike Racks (visible); Ambassador Contact (yes or no).
+          Additional Comments contains any comments not used by other data points. No redundant info please.
+
+          You also need to create an additional datapoint named 'AlleyCat Score', based on this criteria:
+          Level 3: 6 courts minimum; Permanent Lines; Permanent Nets; Paddle Rack - Queue System
+          Level 4: Skill Differentiated play
+          Level 5: 12 Courts minimum; 2 or more Premium Amenities
+          Please create an additional field with the number 3,4, or 5 at the end of the parsed response.
+          `
         },
         {
+          // next iteration I need 2 solid examples where user sends transcription text and I show desired output
           role: "user",
           content: `Can you help me enter this transcripted message as json data? Message: ${transcriptionText}.`
         }
@@ -139,16 +150,18 @@ function writeToSheets(parsedContent) {
     const parsedObject = JSON.parse(parsedContent);
     const values = [
       [
-        parsedObject.State,
-        parsedObject.City,
         parsedObject.Court,
-        parsedObject["Permanent Lines"],
-        parsedObject["Permanent Nets"],
-        parsedObject["Paddle Rack"],
-        parsedObject["Number of Courts"],
-        parsedObject["Ability or Skill Based Courts"],
-        parsedObject["Luxury Enhancements"],
-        parsedObject["Additional Comments"]
+        parsedObject.City,
+        parsedObject.State,
+        parsedObject["Permanent Lines"], 
+        parsedObject["Permanent Nets"], 
+        parsedObject["Paddle Rack"], 
+        parsedObject["Number of Courts"], 
+        parsedObject["Ability or Skill Based Courts"], 
+        parsedObject["Premium Amenities"],
+        parsedObject["Additional Enhancements"],
+        parsedObject["Additional Comments"],
+        parsedObject["AlleyCat Score"]
       ]
     ];
 
