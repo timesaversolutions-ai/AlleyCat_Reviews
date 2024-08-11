@@ -4,6 +4,7 @@ const COMPLETIONS_API_URL = 'https://api.openai.com/v1/chat/completions';
 const FOLDER_ID = '1kweeXFwclO3dXF5yJATlhLtG1206Ijdf';
 const SPREADSHEET_ID = '1YYj8oqUT0dlJrXOC1PeYj06knozwTMD8ASO0EuZ58fs';
 const SHEET_NAME = 'Sheet1';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyC-Jq692uT-dX3pGNbwbHMMd6GPANrfrg4';
 
 function watchFolder() {
   Logger.log('Starting watchFolder function...');
@@ -93,23 +94,16 @@ function parseTranscription(file, folder, parsedFileName) {
       messages: [
         {
           role: "system",
-          content: `You are an assistant which takes a transcripted message and outputs the relevant information in key value pairs as a json file to be uploaded to a google sheet. Here are the data points to parse for: Court, City, State, Permanent Lines, Permanent Nets, Paddle Rack (yes or no), Number of Courts, Ability or Skill Based Courts, Premium Amenities, Additional Enhancements, Additional Comments.
-          Ability or Skill Based Courts refers to whether a court (yes or no) : separates courts by ratings of 3.0 and below (beginner) and 3.5 and up (advanced).
-          Premium Amenities are whether a court offers (yes or no): Pro Shop, Snack Bar/Restaurant, Demo Paddles, Local Pro/Lessons, Ball Machine Rental.
-          Additional Enhancements are whter a court offers (yes or no): Lights; Windscreens; Wind Flags; N/S Dividers; E/W Dividers; Restrooms; Water Fountain; Seating; Trash Recepticles; Recycling Stations; Ball Recycling; Parking; Parking visible from Courts; Defibrillator; Picnic Tables; Bike Racks (visible); Ambassador Contact (yes or no).
-          Additional Comments contains any comments not used by other data points. No redundant info please.
-
+          content: `You are an agent which takes a transcripted message and outputs the relevant information in key value pairs as a json file to be uploaded to a google sheet. Here are the data points to parse for: Court, City, State, Permanent Lines, Permanent Nets, Paddle Rack (yes or no), Number of Courts, Ability or Skill Based Courts, Premium Amenities, Additional Enhancements, Additional Comments. 
+          Ability or Skill Based Courts refers to whether a court (yes or no) separates courts by ratings of 3.0 and below (beginner) and 3.5 and up (advanced). Premium Amenities are whether a court offers (yes or no): Pro Shop, Snack Bar/Restaurant, Demo Paddles, Local Pro/Lessons, Ball Machine Rental. Additional Enhancements are whether a court offers (yes or no): Lights; Windscreens; Wind Flags; N/S Dividers; E/W Dividers; Restrooms; Water Fountain; Seating; Trash Recepticles; Recycling Stations; Ball Recycling; Parking; Parking visible from Courts; Defibrillator; Picnic Tables; Bike Racks (visible); Ambassador Contact (yes or no). Additional Comments contains any comments not used by other data points. No redundant info please.
           You also need to create an additional datapoint named 'AlleyCat Score', based on this criteria:
           Level 3: 6 courts minimum; Permanent Lines; Permanent Nets; Paddle Rack - Queue System
           Level 4: Skill Differentiated play
-          Level 5: 12 Courts minimum; 2 or more Premium Amenities
-          Please create an additional field with the number 3,4, or 5 at the end of the parsed response.
-          `
+          Level 5: 12 Courts minimum; 2 or more Premium Amenities`
         },
         {
-          // next iteration I need 2 solid examples where user sends transcription text and I show desired output
           role: "user",
-          content: `Can you help me enter this transcripted message as json data? Message: ${transcriptionText}.`
+          content: `Can you organize this transcripted message into json data? Output should be a raw json file. Message to be organized: ${transcriptionText}.`
         }
       ]
     };
@@ -134,10 +128,60 @@ function parseTranscription(file, folder, parsedFileName) {
     Logger.log(`Parsed transcription saved as ${parsedFileName} for file: ${file.getName()}`);
 
     Logger.log(`Writing parsed content to Google Sheets for file: ${file.getName()}`);
-    writeToSheets(parsedContent);
+    const parsedObject = JSON.parse(parsedContent);
+
+    // Now call the findPlace function to get additional information
+    const placeData = findPlace(parsedObject.Court, parsedObject.City, parsedObject.State);
+    parsedObject.Latitude = placeData.Latitude;
+    parsedObject.Longitude = placeData.Longitude;
+    parsedObject.Address = placeData.Address;
+    parsedObject.Website = placeData.Website;
+    parsedObject.Phone = placeData.Phone;
+    parsedObject.Hours = placeData.Hours;
+
+    // Write the updated object with new data to the sheet
+    writeToSheets(JSON.stringify(parsedObject));
   } catch (error) {
     Logger.log(`Error in parseTranscription function for file: ${file.getName()} - ${error.message}`);
   }
+}
+
+function findPlace(courtName, city, state) {
+  const query = courtName + ", " + city + ", " + state;
+  const apiKey = GOOGLE_MAPS_API_KEY;
+  const findPlaceUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(query)}&inputtype=textquery&fields=place_id,name,formatted_address,geometry&key=${apiKey}`;
+
+  const response = UrlFetchApp.fetch(findPlaceUrl);
+  const json = JSON.parse(response.getContentText());
+
+  if (json.candidates && json.candidates.length > 0) {
+    const place = json.candidates[0];
+    const placeId = place.place_id;
+
+    const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,geometry,opening_hours,website,formatted_phone_number&key=${apiKey}`;
+    const detailsResponse = UrlFetchApp.fetch(detailsUrl);
+    const detailsJson = JSON.parse(detailsResponse.getContentText());
+
+    if (detailsJson.result) {
+      const details = detailsJson.result;
+      return {
+        Latitude: place.geometry.location.lat,
+        Longitude: place.geometry.location.lng,
+        Address: place.formatted_address,
+        Website: details.website || "N/A",
+        Phone: details.formatted_phone_number || "N/A",
+        Hours: details.opening_hours ? details.opening_hours.weekday_text.join(", ") : "N/A"
+      };
+    }
+  }
+  return {
+    Latitude: "N/A",
+    Longitude: "N/A",
+    Address: "N/A",
+    Website: "N/A",
+    Phone: "N/A",
+    Hours: "N/A"
+  };
 }
 
 function writeToSheets(parsedContent) {
@@ -148,6 +192,7 @@ function writeToSheets(parsedContent) {
     const nextRow = data.length + 1;
 
     const parsedObject = JSON.parse(parsedContent);
+    Logger.log(parsedObject);
     const values = [
       [
         parsedObject.Court,
@@ -161,7 +206,13 @@ function writeToSheets(parsedContent) {
         parsedObject["Premium Amenities"],
         parsedObject["Additional Enhancements"],
         parsedObject["Additional Comments"],
-        parsedObject["AlleyCat Score"]
+        parsedObject["AlleyCat Score"],
+        parsedObject.Latitude,
+        parsedObject.Longitude,
+        parsedObject.Address,
+        parsedObject.Website,
+        parsedObject.Phone,
+        parsedObject.Hours
       ]
     ];
 
