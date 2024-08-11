@@ -1,4 +1,4 @@
-// const YOUR_GOOGLE_PLACES_API_KEY = 'AIzaSyC-Jq692uT-dX3pGNbwbHMMd6GPANrfrg4';
+const YOUR_GOOGLE_PLACES_API_KEY = 'AIzaSyC-Jq692uT-dX3pGNbwbHMMd6GPANrfrg4';
 
 function findPlace() {
     // Manually input court name, city, and state
@@ -10,7 +10,7 @@ function findPlace() {
     const query = courtName + ", " + city + ", " + state;
     
     // Your API key
-    const apiKey = GOOGLE_MAPS_API_KEY;
+    const apiKey = YOUR_GOOGLE_PLACES_API_KEY;
     
     // Construct the request URL for Find Place request
     const findPlaceUrl = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?" +
