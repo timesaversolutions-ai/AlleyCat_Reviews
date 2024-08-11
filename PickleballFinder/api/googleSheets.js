@@ -13,7 +13,7 @@ export const fetchCourts = async () => {
       throw new Error("Not enough data in the sheet");
     }
 
-    const headers = rows[3].slice(0, 12);
+    const headers = rows[3].slice(0, 18);
     // console.log(headers);
     const data = rows.slice(4).map(row => {
       let obj = {};

@@ -68,6 +68,32 @@ export const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f0f0f0',
   },
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+  },  
+  icon: {
+    marginHorizontal: 5,
+  },
+  mapContainer: {
+    height: '50%',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+  courtItemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  detailsButton: {
+    padding: 10,
+  },
 });
 
 
