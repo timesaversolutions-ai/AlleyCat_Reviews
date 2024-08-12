@@ -45,9 +45,9 @@ const CourtDetailsScreen = ({ route }) => {
       <View key={index} style={styles.detailRow}>
         <Text style={styles.detailKey}>{item.key.replace(/_/g, ' ')}:</Text>
         <Icon
-          name={item.value === 'Yes' ? 'checkmark-circle' : 'close-circle'}
+          name={item.value === 'Yes' || item.value === true || item.value === 'true' ? 'checkmark-circle' : 'close-circle'}
           size={20}
-          color={item.value === 'Yes' ? 'green' : 'red'}
+          color={item.value === 'Yes' || item.value === true || item.value === 'true' ? 'green' : 'red'}
         />
       </View>
     ));
