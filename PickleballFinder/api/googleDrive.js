@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// TODO: secure the information here, avoiding client side
 const API_KEY = 'AIzaSyC-Jq692uT-dX3pGNbwbHMMd6GPANrfrg4';
 const FOLDER_ID = '1uDBqazHuPyRuC_RLWUJd24kVkNu9-cAw';
 
