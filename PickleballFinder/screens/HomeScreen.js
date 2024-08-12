@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, Image, TouchableOpacity } from 'react-native';
 import { fetchCourts } from '../api/googleSheets';
+import { fetchCourtImages } from '../api/googleDrive'; // Import the function
 import { styles } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
@@ -11,12 +12,20 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const getCourts = async () => {
       try {
-        const data = await fetchCourts();
-        // console.log(data);
-        setCourts(data);
+        const courtsData = await fetchCourts();
+
+        // Fetch images for each court using the Google Drive API
+        const courtsWithImages = await Promise.all(
+          courtsData.map(async (court) => {
+            const imageUri = await fetchCourtImages(court.Court);
+            return { ...court, 'Court Image': imageUri };
+          })
+        );
+
+        setCourts(courtsWithImages);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching courts:', error);
+        console.error('Error fetching courts or images:', error);
         setLoading(false);
       }
     };
@@ -49,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
           >
             {item['Court Image'] ? (
               <Image
-                source={{ uri: item['Court Image'] }} // Use the actual image URL from Google Sheets
+                source={{ uri: item['Court Image'] }}
                 style={styles.courtImage}
               />
             ) : (

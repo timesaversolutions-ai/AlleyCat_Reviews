@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, ScrollView, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../styles/styles';
-import courtImage from '../assets/sawyer_point.jpg';
 
 const CourtDetailsScreen = ({ route }) => {
   const {
@@ -21,7 +20,8 @@ const CourtDetailsScreen = ({ route }) => {
     'Address': address,
     'Phone': phone,
     'Hours': hours,
-    'Website': website
+    'Website': website,
+    'Court Image': courtImage // Include the court image passed from HomeScreen
   } = route.params;
 
   // Function to render icons based on a number
@@ -55,7 +55,6 @@ const CourtDetailsScreen = ({ route }) => {
 
   // Function to parse and render the hours
   const renderHours = (hoursData) => {
-    // Remove the "Hours=" prefix and split by days
     const hoursArray = hoursData.replace('Hours=', '').split(', ').map(item => {
       const [day, time] = item.split(': ');
       return { day, time };
@@ -73,7 +72,11 @@ const CourtDetailsScreen = ({ route }) => {
     <ScrollView style={styles.container}>
       <Text style={styles.detailTitle}>{Court}</Text>
       <View>
-        <Image source={courtImage} alt="Sawyer Point" style={styles.courtImage} />
+        {courtImage ? (
+          <Image source={{ uri: courtImage }} alt={Court} style={styles.courtImage} />
+        ) : (
+          <Text>No Image Available</Text>
+        )}
       </View>
 
       <View style={styles.iconContainer}>
