@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, Image, TouchableOpacity } from 'react-native';
 import { fetchCourts } from '../api/googleSheets';
-import { fetchCourtImages } from '../api/googleDrive'; // Import the function
+import { fetchCourtImages } from '../api/googleDrive';
 import { styles } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
