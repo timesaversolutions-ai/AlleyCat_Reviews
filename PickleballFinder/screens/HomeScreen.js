@@ -3,11 +3,20 @@ import { View, Text, TextInput, FlatList, Image, TouchableOpacity } from 'react-
 import { fetchCourts } from '../api/googleSheets';
 import { fetchCourtImages } from '../api/googleDrive';
 import { styles } from '../styles/styles';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const HomeScreen = ({ navigation }) => {
   const [courts, setCourts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+
+  const renderIcons = (num) => {
+    const icons = [];
+    for (let i = 0; i < num; i++) {
+      icons.push(<Icon key={i} name="star" size={20} color="black" style={styles.icon} />);
+    }
+    return icons;
+  };
 
   useEffect(() => {
     const getCourts = async () => {
@@ -42,13 +51,16 @@ const HomeScreen = ({ navigation }) => {
   }
 
   return (
+    // <Icon name="flask" size={30} color="black" style={styles.icon} />
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
+      <TouchableOpacity style={styles.searchBar}>
+        <Icon name="search" size={20} color="gray" style={{ paddingRight: 10 }} />
+        <TextInput
         placeholder="Search by name, city, etc."
         value={search}
         onChangeText={setSearch}
-      />
+        />
+      </TouchableOpacity>
       <FlatList
         data={filteredCourts}
         renderItem={({ item }) => (
@@ -66,9 +78,17 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.placeholderText}>No Image Available</Text>
               </View>
             )}
-            <Text>Court: {item.Court}</Text>
-            <Text>City: {item.City}</Text>
-            <Text>State: {item.State}</Text>
+            <TouchableOpacity style={styles.courtItemContainer}>
+              <Text style={styles.courtName}>
+                {item.Court}
+              </Text>
+              <View style={styles.iconContainer}>
+                {renderIcons(Number(item['AlleyCat Score']) || 0)}
+              </View>
+              <Text style={styles.locationText}>
+                {item.City}, {item.State}
+              </Text>
+            </TouchableOpacity>
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}

@@ -15,8 +15,8 @@ const Stack = createNativeStackNavigator();
 function HomeStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="CourtDetails" component={CourtDetailsScreen} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="CourtDetails" component={CourtDetailsScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
@@ -44,9 +44,9 @@ function TabNavigator() {
         tabBarShowLabel: true,
       })}
     >
-      <Tab.Screen name="Explore" component={HomeStack} />
-      <Tab.Screen name="Map" component={MapsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Explore" component={HomeStack} options={{ headerShown: false }} />
+      <Tab.Screen name="Map" component={MapsScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 }

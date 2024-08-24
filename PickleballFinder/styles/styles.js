@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    paddingTop: 60,
     backgroundColor: '#fff',
   },
   searchBar: {
@@ -13,6 +14,8 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 20,
     paddingLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   courtItem: {
     padding: 10,
@@ -93,6 +96,35 @@ export const styles = StyleSheet.create({
   },
   detailsButton: {
     padding: 10,
+  },
+  courtItemContainer: {
+    // flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10,
+    justifyContent: 'space-between',
+    paddingVertical: 10, // Add padding for better touchable area
+    backgroundColor: '#fff', // Optional: background color
+    borderBottomWidth: 1, // Optional: for separating items
+    borderBottomColor: '#ddd', // Optional: color for the border
+  },
+  courtName: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    flex: 1, // Allows the court name to take available space
+    paddingRight: 10, // Space between the name and the icons
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginRight: 10, // Space between the icons and the location
+    alignItems: 'center', // Center icons vertically
+    paddingTop: 10,
+  },
+  locationText: {
+    fontSize: 14,
+    color: '#555', // Subtle color for the location text
+    flexShrink: 1, // Prevents the location text from overflowing
+    paddingTop: 10
   },
 });
 

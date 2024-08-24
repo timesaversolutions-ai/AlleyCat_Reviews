@@ -46,12 +46,14 @@ const MapsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
+      <TouchableOpacity style={styles.searchBar}>
+        <Icon name="search" size={20} color="gray" style={{ paddingRight: 10 }} />
+        <TextInput
         placeholder="Search by name, city, etc."
         value={search}
         onChangeText={setSearch}
-      />
+        />
+      </TouchableOpacity>
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
