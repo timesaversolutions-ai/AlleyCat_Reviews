@@ -1,3 +1,4 @@
-Let's break down how Large Language Models (LLMs) learn to process human language.
+These are concept's we'll discuss later on in the semester
 
-Lastly, we need to address the general ethical concerns about AI. Think of it like driving on a busy road. While the journey offers many conveniences, you must remain aware of the rules and the impact your actions have on others. Key issues to keep in mind include bias and fairness, privacy and surveillance, and accountability and transparency. Just as responsible drivers must be cautious and considerate, AI developers and users must carefully consider the ethical implications of their work.
+We'll compare these tools during an in-class exercise
+
