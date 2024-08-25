@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../styles/styles';
 
-const CourtDetailsScreen = ({ route }) => {
+const CourtDetailsScreen = ({ route, navigation }) => {
   const {
     Court,
     City,
@@ -70,6 +70,9 @@ const CourtDetailsScreen = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={{ alignItems: 'left' }}>
+        <Button title="Go Back" onPress={() => navigation.goBack()} />
+      </View>
       <Text style={styles.detailTitle}>{Court}</Text>
       <View>
         {courtImage ? (

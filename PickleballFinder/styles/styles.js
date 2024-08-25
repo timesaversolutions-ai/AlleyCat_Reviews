@@ -86,26 +86,19 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  courtItemContainer: {
+  mapsButtons: {
+    padding: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    justifyContent: 'space-between',
   },
-  detailsButton: {
-    padding: 10,
-  },
-  courtItemContainer: {
+  courtItemDetailsContainer: {
     // flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
     justifyContent: 'space-between',
     paddingVertical: 10, // Add padding for better touchable area
     backgroundColor: '#fff', // Optional: background color
-    borderBottomWidth: 1, // Optional: for separating items
-    borderBottomColor: '#ddd', // Optional: color for the border
   },
   courtName: {
     fontWeight: 'bold',

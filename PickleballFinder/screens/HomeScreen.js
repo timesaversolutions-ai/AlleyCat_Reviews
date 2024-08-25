@@ -43,8 +43,11 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const filteredCourts = courts.filter(court =>
-    court.Court?.toLowerCase().includes(search.toLowerCase())
+    court.Court?.toLowerCase().includes(search.toLowerCase()) ||
+    court.City?.toLowerCase().includes(search.toLowerCase()) ||
+    court.State?.toLowerCase().includes(search.toLowerCase())
   );
+  
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -65,8 +68,8 @@ const HomeScreen = ({ navigation }) => {
         data={filteredCourts}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.courtItem}
             onPress={() => navigation.navigate('CourtDetails', { ...item })}
+            style={styles.courtItem}
           >
             {item['Court Image'] ? (
               <Image
@@ -78,7 +81,7 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.placeholderText}>No Image Available</Text>
               </View>
             )}
-            <TouchableOpacity style={styles.courtItemContainer}>
+            <View style={styles.courtItemDetailsContainer}>
               <Text style={styles.courtName}>
                 {item.Court}
               </Text>
@@ -88,7 +91,7 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.locationText}>
                 {item.City}, {item.State}
               </Text>
-            </TouchableOpacity>
+            </View>
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}

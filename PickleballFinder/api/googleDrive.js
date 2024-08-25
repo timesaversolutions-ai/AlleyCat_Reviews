@@ -19,7 +19,6 @@ export const fetchCourtImages = async (Court) => {
     );
       
 
-    console.log('Google Drive API Response:', response.data);
     const files = response.data.files;
     if (files.length > 0) {
       return files[0].webContentLink; // Return the first matching image
