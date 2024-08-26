@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, ScrollView, Image, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, Image, Button, TouchableOpacity, Linking, } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../styles/styles';
 
@@ -21,8 +21,11 @@ const CourtDetailsScreen = ({ route, navigation }) => {
     'Phone': phone,
     'Hours': hours,
     'Website': website,
-    'Court Image': courtImage // Include the court image passed from HomeScreen
+    'Court Image': courtImage
   } = route.params;
+  
+  // hide hours
+  const [hoursVisible, setHoursVisible] = useState(false);
 
   // Function to render icons based on a number
   const renderIcons = (num) => {
@@ -73,33 +76,37 @@ const CourtDetailsScreen = ({ route, navigation }) => {
       <View style={{ alignItems: 'left' }}>
         <Button title="Go Back" onPress={() => navigation.goBack()} />
       </View>
-      <Text style={styles.detailTitle}>{Court}</Text>
       <View>
         {courtImage ? (
-          <Image source={{ uri: courtImage }} alt={Court} style={styles.courtImage} />
+          <Image source={{ uri: courtImage }} style={styles.homeScreenCourtImage} />
         ) : (
           <Text>No Image Available</Text>
         )}
       </View>
+      <Text style={styles.detailTitle}>{Court}</Text>
+      <View style={styles.detailsContainer}>
+        <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
+          <Icon name="location-outline" size={20} color="gray" style={{ paddingRight: 10 }} />
+          <Text style={{ width: '70%'}}>{address}</Text>
+        </View>
+        <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
+          <Icon name="call-outline" size={20} color="gray" style={{ paddingRight: 10 }} />
+          <Text style={styles.detailLink} onPress={() => Linking.openURL(`tel:${phone}`)}>{phone}</Text>
+        </View>
+        <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
+          <Icon name="time-outline" size={20} color="gray" style={{ paddingRight: 10 }} />
+          <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setHoursVisible(!hoursVisible)}>
+            <Text>Hours of Operation</Text>
+            <Icon name="chevron-down-outline" size={20} color="gray" />
+          </TouchableOpacity>
+        </View>
+        {hoursVisible && renderHours(hours)}
+        <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
+          <Icon name="link-outline" size={20} color="gray" style={{ paddingRight: 10 }} />
+          <Text style={styles.detailLink} onPress={() => Linking.openURL(website)}>{website}</Text>
+        </View>
+      </View>
 
-      <View style={styles.iconContainer}>
-        {renderIcons(Number(alleyCatScore))}
-      </View>
-      <Text style={styles.detailHeader}>Hours of Operation</Text>
-      {renderHours(hours)}
-      <View style={styles.detailRow}>
-        <Text style={styles.detailKey}>Address:</Text>
-        <Text style={styles.detailValue}>{address}</Text>
-      </View>
-      <View style={styles.detailRow}>
-        <Text style={styles.detailKey}>Phone:</Text>
-        <Text style={styles.detailValue}>{phone}</Text>
-      </View>
-
-      <View style={styles.detailRow}>
-        <Text style={styles.detailKey}>Website:</Text>
-        <Text style={styles.detailValue}>{website}</Text>
-      </View>
       
       <Text style={styles.detailHeader}>Court Description</Text>
       <Text style={styles.detailText}>{additionalComments}</Text>
@@ -131,6 +138,11 @@ const CourtDetailsScreen = ({ route, navigation }) => {
 
       <Text style={styles.detailHeader}>Additional Enhancements</Text>
       {renderAmenitiesOrEnhancements(additionalEnhancements)}
+      
+      <View style={styles.ratingDisplay}>
+        {renderIcons(Number(alleyCatScore))}
+      </View>
+
     </ScrollView>
   );
 };

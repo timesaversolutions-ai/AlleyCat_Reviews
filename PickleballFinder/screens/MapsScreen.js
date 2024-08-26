@@ -75,14 +75,15 @@ const MapsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.searchBar}>
+      <View style={styles.searchBar}>
         <Icon name="search" size={20} color="gray" style={{ paddingRight: 10 }} />
         <TextInput
         placeholder="Search by name, city, etc."
         value={search}
         onChangeText={setSearch}
         />
-      </TouchableOpacity>
+        <Icon name="filter" size={20} color="gray" style={{ marginLeft: 125 }} />
+      </View>
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
@@ -103,7 +104,7 @@ const MapsScreen = ({ navigation }) => {
             {item['Court Image'] ? (
               <Image
                 source={{ uri: item['Court Image'] }}
-                style={styles.courtImage}
+                style={styles.mapsScreenCourtImage}
               />
             ) : (
               <View style={styles.placeholderImage}>

@@ -56,14 +56,15 @@ const HomeScreen = ({ navigation }) => {
   return (
     // <Icon name="flask" size={30} color="black" style={styles.icon} />
     <View style={styles.container}>
-      <TouchableOpacity style={styles.searchBar}>
+      <View style={styles.searchBar}>
         <Icon name="search" size={20} color="gray" style={{ paddingRight: 10 }} />
         <TextInput
         placeholder="Search by name, city, etc."
         value={search}
         onChangeText={setSearch}
         />
-      </TouchableOpacity>
+        <Icon name="filter" size={20} color="gray" style={{ marginLeft: 125 }} />
+      </View>
       <FlatList
         data={filteredCourts}
         renderItem={({ item }) => (
@@ -74,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
             {item['Court Image'] ? (
               <Image
                 source={{ uri: item['Court Image'] }}
-                style={styles.courtImage}
+                style={styles.homeScreenCourtImage} 
               />
             ) : (
               <View style={styles.placeholderImage}>
@@ -88,8 +89,9 @@ const HomeScreen = ({ navigation }) => {
               <View style={styles.iconContainer}>
                 {renderIcons(Number(item['AlleyCat Score']) || 0)}
               </View>
-              <Text style={styles.locationText}>
-                {item.City}, {item.State}
+              <Text style={styles.courtItemDetailsText}>
+                {item.City}, {item.State}{"\n"}
+                {item['# of courts']} courts
               </Text>
             </View>
           </TouchableOpacity>

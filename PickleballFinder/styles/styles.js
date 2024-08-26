@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 25,
     marginBottom: 20,
     paddingLeft: 10,
     flexDirection: 'row',
@@ -22,12 +22,19 @@ export const styles = StyleSheet.create({
     borderBottomColor: 'gray',
     borderBottomWidth: 1,
   },
-  courtImage: {
-    width: '90%',
+  homeScreenCourtImage: {
+    width: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
-    height: 200,
-    marginBottom: 10,
+    height: 300,
+    borderRadius: 25,
+  },
+  mapsScreenCourtImage: {
+    width: '25%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    height: '25%',
+    borderRadius: 25,
   },
   placeholderImage: {
     width: '100%',
@@ -44,6 +51,7 @@ export const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
+    paddingTop: 10,
   },
   detailHeader: {
     fontSize: 18,
@@ -77,7 +85,7 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },  
   icon: {
-    marginHorizontal: 5,
+    marginHorizontal: 2,
   },
   mapContainer: {
     height: '50%',
@@ -94,7 +102,7 @@ export const styles = StyleSheet.create({
   },
   courtItemDetailsContainer: {
     // flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'left',
     paddingLeft: 10,
     justifyContent: 'space-between',
     paddingVertical: 10, // Add padding for better touchable area
@@ -102,23 +110,45 @@ export const styles = StyleSheet.create({
   },
   courtName: {
     fontWeight: 'bold',
+    textAlign: 'left',
     fontSize: 18,
-    flex: 1, // Allows the court name to take available space
-    paddingRight: 10, // Space between the name and the icons
+    flex: 1,
+    width: '70%',
+    paddingRight: 10,
   },
   iconContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginRight: 10, // Space between the icons and the location
-    alignItems: 'center', // Center icons vertically
-    paddingTop: 10,
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
-  locationText: {
+  ratingDisplay: {
+    size: 10,
+    flexDirection: 'row',
+    top: 10,
+    right: 10,
+  },
+  detailsContainer: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 25,
+  },
+  detailLink: {
+    color: 'blue',
+    textDecorationLine: 'underline',
+    width: '70%',
+  },
+  courtItemDetailsText: {
     fontSize: 14,
     color: '#555', // Subtle color for the location text
-    flexShrink: 1, // Prevents the location text from overflowing
-    paddingTop: 10
+    flexShrink: 1,
   },
+  carouselImage: {
+    width: '100%',
+    height: 200, // Adjust the height as needed
+    resizeMode: 'cover',
+  },  
 });
 
 
