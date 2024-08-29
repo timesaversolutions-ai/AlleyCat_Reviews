@@ -56,6 +56,16 @@ const CourtDetailsScreen = ({ route, navigation }) => {
     ));
   };
 
+  const renderIcon = (value) => {
+    return (
+      <Icon
+        name={value === 'TRUE' ? 'checkmark-circle' : 'close-circle'}
+        size={20}
+        color={value === 'TRUE' ? 'green' : 'red'}
+      />
+    );
+  };
+
   // Function to parse and render the hours
   const renderHours = (hoursData) => {
     const hoursArray = hoursData.replace('Hours=', '').split(', ').map(item => {
@@ -73,7 +83,8 @@ const CourtDetailsScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={{ alignItems: 'left' }}>
+      <View style={{ alignItems: 'left', flexDirection: 'row', alignItems: 'center' }}>
+        <Icon name="arrow-back-outline" size={20} color='black' />
         <Button title="Go Back" onPress={() => navigation.goBack()} />
       </View>
       <View>
@@ -84,7 +95,7 @@ const CourtDetailsScreen = ({ route, navigation }) => {
         )}
       </View>
       <Text style={styles.detailTitle}>{Court}</Text>
-      <View style={styles.detailsContainer}>
+      <View style={styles.detailsSection1}>
         <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
           <Icon name="location-outline" size={20} color="gray" style={{ paddingRight: 10 }} />
           <Text style={{ width: '70%'}}>{address}</Text>
@@ -95,49 +106,54 @@ const CourtDetailsScreen = ({ route, navigation }) => {
         </View>
         <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
           <Icon name="time-outline" size={20} color="gray" style={{ paddingRight: 10 }} />
-          <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => setHoursVisible(!hoursVisible)}>
+          <TouchableOpacity style={{ flexDirection: 'row'  }} onPress={() => setHoursVisible(!hoursVisible)}>
             <Text>Hours of Operation</Text>
             <Icon name="chevron-down-outline" size={20} color="gray" />
           </TouchableOpacity>
         </View>
         {hoursVisible && renderHours(hours)}
-        <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
+        <View style={{ flexDirection: 'row' }}>
           <Icon name="link-outline" size={20} color="gray" style={{ paddingRight: 10 }} />
           <Text style={styles.detailLink} onPress={() => Linking.openURL(website)}>{website}</Text>
         </View>
       </View>
-
       
       <Text style={styles.detailHeader}>Court Description</Text>
       <Text style={styles.detailText}>{additionalComments}</Text>
-      <Text style={styles.detailHeader}>Court Details</Text>
 
-      <View style={styles.detailRow}>
-        <Text style={styles.detailKey}>Number of Courts:</Text>
-        <Text style={styles.detailValue}>{numOfCourts}</Text>
-      </View>
-      <View style={styles.detailRow}>
-        <Text style={styles.detailKey}>Ability Based Courts:</Text>
-        <Text style={styles.detailValue}>{abilityBasedCourts}</Text>
-      </View>
-      <View style={styles.detailRow}>
-        <Text style={styles.detailKey}>Permanent Lines:</Text>
-        <Text style={styles.detailValue}>{permanentLines}</Text>
-      </View>
-      <View style={styles.detailRow}>
-        <Text style={styles.detailKey}>Permanent Nets:</Text>
-        <Text style={styles.detailValue}>{permanentNets}</Text>
-      </View>
-      <View style={styles.detailRow}>
-        <Text style={styles.detailKey}>Paddle Rack/Queue:</Text>
-        <Text style={styles.detailValue}>{paddleRackQueue}</Text>
+      <Text style={styles.detailHeader}>Court Details</Text>
+      <View style={styles.detailsSection2}> 
+        <View style={styles.detailRow}>
+          <Text style={styles.detailKey}>Number of Courts:</Text>
+          <Text style={styles.detailValue}>{numOfCourts}</Text>
+        </View>
+        <View style={styles.detailRow}>
+          <Text style={styles.detailKey}>Ability Based Courts:</Text>
+          {renderIcon(abilityBasedCourts)}
+        </View>
+        <View style={styles.detailRow}>
+          <Text style={styles.detailKey}>Permanent Lines:</Text>
+          {renderIcon(permanentLines)}
+        </View>
+        <View style={styles.detailRow}>
+          <Text style={styles.detailKey}>Permanent Nets:</Text>
+          {renderIcon(permanentNets)}
+        </View>
+        <View style={styles.detailRow}>
+          <Text style={styles.detailKey}>Paddle Rack/Queue:</Text>
+          {renderIcon(paddleRackQueue)}
+        </View>
       </View>
       
       <Text style={styles.detailHeader}>Amenities and Features</Text>
-      {renderAmenitiesOrEnhancements(premiumAmenities)}
+      <View style={styles.detailsSection2}>
+        {renderAmenitiesOrEnhancements(premiumAmenities)}
+      </View>
 
       <Text style={styles.detailHeader}>Additional Enhancements</Text>
-      {renderAmenitiesOrEnhancements(additionalEnhancements)}
+      <View style={styles.detailsSection2}>
+        {renderAmenitiesOrEnhancements(additionalEnhancements)}
+      </View>
       
       <View style={styles.ratingDisplay}>
         {renderIcons(Number(alleyCatScore))}

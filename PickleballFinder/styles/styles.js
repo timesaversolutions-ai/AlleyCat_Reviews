@@ -58,6 +58,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 12,
     marginBottom: 3,
+    paddingTop: 20,
   },
   detailText: {
     fontSize: 16,
@@ -67,6 +68,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 8,
+    paddingBottom: 15,
+    borderBottomWidth: .5,
+    borderColor: '#ccc',
   },
   detailKey: {
     fontSize: 16,
@@ -94,11 +98,18 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  mapsButtons: {
-    padding: 10,
+  mapsButtonContainer: {
+    padding: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  mapsButtons: {
+    padding: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 35,
+    backgroundColor: '#dedede',
   },
   courtItemDetailsContainer: {
     // flexDirection: 'row',
@@ -128,11 +139,17 @@ export const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
-  detailsContainer: {
+  detailsSection1: {
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 10,
-    borderRadius: 25,
+    borderRadius: 5,
+  },
+  detailsSection2: {
+    borderWidth: .5,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
   },
   detailLink: {
     color: 'blue',

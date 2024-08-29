@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { fetchCourts } from '../api/googleSheets';
 import { fetchCourtImages } from '../api/googleDrive';
 import { styles } from '../styles/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Carousel from 'react-native-reanimated-carousel';
 
 const HomeScreen = ({ navigation }) => {
   const [courts, setCourts] = useState([]);
@@ -26,8 +27,8 @@ const HomeScreen = ({ navigation }) => {
         // Fetch images for each court using the Google Drive API
         const courtsWithImages = await Promise.all(
           courtsData.map(async (court) => {
-            const imageUri = await fetchCourtImages(court.Court);
-            return { ...court, 'Court Image': imageUri };
+            const imageUris = await fetchCourtImages(court.Court);
+            return { ...court, images: imageUris };
           })
         );
 
@@ -41,6 +42,41 @@ const HomeScreen = ({ navigation }) => {
 
     getCourts();
   }, []);
+
+  const CourtImagesCarousel = ({ images }) => {
+    const width = Dimensions.get('window').width;
+
+    return (
+        <View style={{ flex: 1 }}>
+            <Carousel
+                loop
+                width={width}
+                height={width / 2}
+                // autoPlay={true}
+                data={images}
+                panGestureHandlerProps={{
+                  activeOffsetX: [-10, 10],
+                }}
+                scrollAnimationDuration={250}
+                renderItem={({ item }) => (
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Image 
+                            source={{ uri: item }} 
+                            style={{ width: '100%', height: '100%', borderRadius: 10 }} 
+                            resizeMode="cover"
+                        />
+                    </View>
+                )}
+            />
+        </View>
+    );
+  };
 
   const filteredCourts = courts.filter(court =>
     court.Court?.toLowerCase().includes(search.toLowerCase()) ||
@@ -72,11 +108,8 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('CourtDetails', { ...item })}
             style={styles.courtItem}
           >
-            {item['Court Image'] ? (
-              <Image
-                source={{ uri: item['Court Image'] }}
-                style={styles.homeScreenCourtImage} 
-              />
+            {item.images && item.images.length > 0 ? (
+              <CourtImagesCarousel images={item.images} />
             ) : (
               <View style={styles.placeholderImage}>
                 <Text style={styles.placeholderText}>No Image Available</Text>

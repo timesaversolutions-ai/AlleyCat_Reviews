@@ -18,15 +18,14 @@ export const fetchCourtImages = async (Court) => {
       }
     );
       
-
     const files = response.data.files;
     if (files.length > 0) {
-      return files[0].webContentLink; // Return the first matching image
+      return files.map(file => file.webContentLink); // Return an array of all matching image links
     } else {
-      return null; // No matching image found
+      return [];
     }
   } catch (error) {
-    console.error('Error fetching image from Google Drive:', error);
+    console.error('Error fetching images from Google Drive:', error);
     throw error;
   }
 };
