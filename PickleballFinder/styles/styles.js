@@ -19,8 +19,6 @@ export const styles = StyleSheet.create({
   },
   courtItem: {
     padding: 10,
-    borderBottomColor: 'gray',
-    borderBottomWidth: 1,
   },
   homeScreenCourtImage: {
     width: '100%',
@@ -59,6 +57,13 @@ export const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 3,
     paddingTop: 20,
+  },
+  sectionHeader: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginTop: 1,
+    marginBottom: 3,
+    paddingBottom: 15,
   },
   detailText: {
     fontSize: 16,

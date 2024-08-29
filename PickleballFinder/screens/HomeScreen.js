@@ -101,6 +101,9 @@ const HomeScreen = ({ navigation }) => {
         />
         <Icon name="filter" size={20} color="gray" style={{ marginLeft: 125 }} />
       </View>
+      <Text style={styles.sectionHeader}>
+        Explore Courts
+      </Text>
       <FlatList
         data={filteredCourts}
         renderItem={({ item }) => (

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, Button, TouchableOpacity, Linking, } from 'react-native';
+import { View, Text, ScrollView, Image, Button, TouchableOpacity, Linking, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../styles/styles';
+import Carousel from 'react-native-reanimated-carousel';
 
 const CourtDetailsScreen = ({ route, navigation }) => {
   const {
@@ -21,11 +22,46 @@ const CourtDetailsScreen = ({ route, navigation }) => {
     'Phone': phone,
     'Hours': hours,
     'Website': website,
-    'Court Image': courtImage
+    images: images
   } = route.params;
   
   // hide hours
   const [hoursVisible, setHoursVisible] = useState(false);
+
+  const CourtImagesCarousel = ({ images }) => {
+    const width = Dimensions.get('window').width;
+
+    return (
+        <View style={{ flex: 1 }}>
+            <Carousel
+                loop
+                width={width}
+                height={width / 2}
+                // autoPlay={true}
+                data={images}
+                panGestureHandlerProps={{
+                  activeOffsetX: [-10, 10],
+                }}
+                scrollAnimationDuration={250}
+                renderItem={({ item }) => (
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Image 
+                            source={{ uri: item }} 
+                            style={{ width: '100%', height: '100%', borderRadius: 10 }} 
+                            resizeMode="cover"
+                        />
+                    </View>
+                )}
+            />
+        </View>
+    );
+  };
 
   // Function to render icons based on a number
   const renderIcons = (num) => {
@@ -87,11 +123,13 @@ const CourtDetailsScreen = ({ route, navigation }) => {
         <Icon name="arrow-back-outline" size={20} color='black' />
         <Button title="Go Back" onPress={() => navigation.goBack()} />
       </View>
-      <View>
-        {courtImage ? (
-          <Image source={{ uri: courtImage }} style={styles.homeScreenCourtImage} />
-        ) : (
-          <Text>No Image Available</Text>
+      <View style={{ paddingBottom: 20 }} >
+        {images && images.length > 0 ? (
+            <CourtImagesCarousel images={images} />
+            ) : (
+              <View style={styles.placeholderImage}>
+                <Text style={styles.placeholderText}>No Image Available</Text>
+              </View>
         )}
       </View>
       <Text style={styles.detailTitle}>{Court}</Text>
