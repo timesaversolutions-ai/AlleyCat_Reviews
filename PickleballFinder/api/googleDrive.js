@@ -1,7 +1,6 @@
 import axios from 'axios';
+import { gdrive_API_KEY } from '../config';
 
-// TODO: secure the information here, avoiding client side
-const API_KEY = 'AIzaSyC-Jq692uT-dX3pGNbwbHMMd6GPANrfrg4';
 const FOLDER_ID = '1uDBqazHuPyRuC_RLWUJd24kVkNu9-cAw';
 
 // Function to fetch images from Google Drive by court name
@@ -13,7 +12,7 @@ export const fetchCourtImages = async (Court) => {
         params: {
           q: `'${FOLDER_ID}' in parents and name contains '${Court}' and mimeType contains 'image/'`,
           fields: 'files(id, name, webViewLink, webContentLink)',
-          key: API_KEY,
+          key: gdrive_API_KEY,
         },
       }
     );

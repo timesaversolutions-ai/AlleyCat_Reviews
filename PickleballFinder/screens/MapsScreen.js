@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, Image, Button, Linking, Share, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { fetchCourts } from '../api/googleSheets';
@@ -40,40 +40,101 @@ const MapsScreen = ({ navigation }) => {
     getCourts();
   }, []);
 
-  const CourtImagesCarousel = ({ images }) => {
+  const CourtImagesCarousel = memo(({ images, isVertical = false }) => {
     const width = Dimensions.get('window').width;
+    const baseOptions = isVertical
+      ? {
+          vertical: true,
+          width: width,
+          height: width / 4,
+          style: {
+              width: width
+          },
+      }
+      : {
+          vertical: false,
+          width: width / 3,
+          height: width / 4,
+          style: {
+              width: width
+          },
+      };
 
     return (
-        <View style={{ flex: 1 }}>
-            <Carousel
-                loop
-                width={width}
-                height={width / 2}
-                // autoPlay={true}
-                data={images}
-                panGestureHandlerProps={{
+      <View style={{ flex: 1 }}>
+          <Carousel
+              loop
+              {...baseOptions}
+              data={images}
+              panGestureHandlerProps={{
                   activeOffsetX: [-10, 10],
-                }}
-                scrollAnimationDuration={250}
-                renderItem={({ item }) => (
-                    <View
-                        style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Image 
-                            source={{ uri: item }} 
-                            style={{ width: '100%', height: '100%', borderRadius: 10 }} 
-                            resizeMode="cover"
-                        />
-                    </View>
-                )}
-            />
-        </View>
+              }}
+              scrollAnimationDuration={250}
+              renderItem={({ item }) => (
+                  <View
+                      style={{
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          paddingHorizontal: 5,
+                      }}
+                  >
+                      <Image
+                          source={{ uri: item }}
+                          style={{ width: '100%', height: '100%', borderRadius: 10 }}
+                          resizeMode="cover"
+                      />
+                  </View>
+              )}
+          />
+      </View>
     );
-  };
+  }, (prevProps, nextProps) => prevProps.images === nextProps.images);
+
+  const CourtListItem = memo(({ item, onSelect }) => (
+    <View style={styles.courtItem}>
+      {item.images && item.images.length > 0 ? (
+        <CourtImagesCarousel images={item.images} />
+      ) : (
+        <View style={styles.placeholderImage}>
+          <Text style={styles.placeholderText}>No Image Available</Text>
+        </View>
+      )}
+      <TouchableOpacity onPress={() => onSelect(item)}>
+        <View style={styles.courtItemDetailsContainer}>
+          <Text style={styles.courtName}>
+            {item.Court}
+          </Text>
+          <View style={styles.iconContainer}>
+            {renderIcons(Number(item['AlleyCat Score']) || 0)}
+          </View>
+          <Text style={styles.courtItemDetailsText}>
+            {item.City}, {item.State}{"\n"}
+            {item['# of courts']} courts
+          </Text>
+        </View>
+      </TouchableOpacity>
+      
+      <View style={styles.mapsButtonContainer}>
+        <View style={styles.mapsButtons} >
+          <Icon name="arrow-redo-circle-outline" size={20} color="gray" />
+          <Button title="Directions" onPress={() => handleDirections(item)} color="black" />
+        </View>
+        <View style={styles.mapsButtons} >
+          <Icon name="call-outline" size={20} color="gray" />
+          <Button style={styles.mapsButtons} title="Call" onPress={() => handleCall(item)} color="black" />
+        </View>
+        <View style={styles.mapsButtons} >
+          <Icon name="share-outline" size={20} color="gray" />
+          <Button style={styles.mapsButtons} title="Share" onPress={() => handleShare(item)} color="black"/>
+        </View>
+        <Icon 
+          onPress={() => navigation.navigate('CourtDetails', { ...item })}
+          name="information-circle-outline" size={25} color="#007AFF" 
+        />
+      </View>
+    </View>
+  ), (prevProps, nextProps) => prevProps.item.images === nextProps.item.images);  
 
   const filteredCourts = courts.filter(court =>
     court.Court?.toLowerCase().includes(search.toLowerCase()) ||
@@ -141,55 +202,15 @@ const MapsScreen = ({ navigation }) => {
         </MapView>
       </View>
       <FlatList
+        ref={(ref) => { this.flatListRef = ref; }}
+        initialNumToRender={7}
         data={filteredCourts}
         renderItem={({ item }) => (
-          <View style={styles.courtItem}>
-            <TouchableOpacity
-            onPress={() => navigation.navigate('CourtDetails', { ...item })}
-            >
-              {item.images && item.images.length > 0 ? (
-                <CourtImagesCarousel images={item.images} />
-              ) : (
-                <View style={styles.placeholderImage}>
-                  <Text style={styles.placeholderText}>No Image Available</Text>
-                </View>
-              )}
-              <View style={styles.courtItemDetailsContainer}>
-                <Text style={styles.courtName}>
-                  {item.Court}
-                </Text>
-                <View style={styles.iconContainer}>
-                  {renderIcons(Number(item['AlleyCat Score']) || 0)}
-                </View>
-                <Text style={styles.courtItemDetailsText}>
-                  {item.City}, {item.State}{"\n"}
-                  {item['# of courts']} courts
-                </Text>
-              </View>
-            </TouchableOpacity>
-            
-            <View style={styles.mapsButtonContainer}>
-              <View style={styles.mapsButtons} >
-                <Icon name="arrow-redo-circle-outline" size={20} color="gray" />
-                <Button title="Directions" onPress={() => handleDirections(item)} color="black" />
-              </View>
-              <View style={styles.mapsButtons} >
-              <Icon name="call-outline" size={20} color="gray" />
-                <Button style={styles.mapsButtons} title="Call" onPress={() => handleCall(item)} color="black" />
-              </View>
-              <View style={styles.mapsButtons} >
-              <Icon name="share-outline" size={20} color="gray" />
-                <Button style={styles.mapsButtons} title="Share" onPress={() => handleShare(item)} color="black"/>
-              </View>
-              <Icon 
-                onPress={() => navigation.navigate('CourtDetails', { ...item })}
-                name="information-circle-outline" size={25} color="#007AFF" 
-              />
-            </View>
-          </View>
+          <CourtListItem item={item} onSelect={handleCourtSelect} />
         )}
         keyExtractor={(item, index) => index.toString()}
       />
+
     </View>
   );
 };
