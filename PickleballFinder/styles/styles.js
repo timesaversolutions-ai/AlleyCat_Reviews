@@ -170,7 +170,27 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: 200, // Adjust the height as needed
     resizeMode: 'cover',
-  },  
+  },
+  suggestionsContainer: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 100, // Adjust based on the position of your search bar
+    left: 10,
+    right: 10,
+    zIndex: 1000, // Ensure it appears above other components
+    maxHeight: 200, // Limit the height of the suggestion box
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+  },
+
+  suggestionItem: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
 });
 
 
