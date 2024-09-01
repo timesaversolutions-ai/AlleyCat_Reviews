@@ -110,7 +110,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   mapsButtons: {
-    padding: 5,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 35,
@@ -141,8 +141,6 @@ export const styles = StyleSheet.create({
   ratingDisplay: {
     size: 10,
     flexDirection: 'row',
-    top: 10,
-    right: 10,
   },
   detailsSection1: {
     borderWidth: 1,
@@ -185,11 +183,14 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
   },
-
   suggestionItem: {
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+  },
+  buttonText: {
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

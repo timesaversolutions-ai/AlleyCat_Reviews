@@ -132,7 +132,12 @@ const CourtDetailsScreen = ({ route, navigation }) => {
               </View>
         )}
       </View>
-      <Text style={styles.detailTitle}>{Court}</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center' }}>
+        <Text style={styles.detailTitle}>{Court}</Text>
+        <View style={styles.ratingDisplay}>
+          {renderIcons(Number(alleyCatScore))}
+        </View>
+      </View>
       <View style={styles.detailsSection1}>
         <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
           <Icon name="location-outline" size={20} color="gray" style={{ paddingRight: 10 }} />

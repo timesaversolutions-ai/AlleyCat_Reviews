@@ -107,15 +107,21 @@ const MapsScreen = ({ navigation }) => {
       <View style={styles.mapsButtonContainer}>
         <View style={styles.mapsButtons} >
           <Icon name="arrow-redo-circle-outline" size={20} color="gray" />
-          <Button title="Directions" onPress={() => handleDirections(item)} color="black" />
+          <TouchableOpacity onPress={() => handleDirections(item)}>
+            <Text style={styles.buttonText}>Directions</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.mapsButtons} >
           <Icon name="call-outline" size={20} color="gray" />
-          <Button style={styles.mapsButtons} title="Call" onPress={() => handleCall(item)} color="black" />
+          <TouchableOpacity onPress={() => handleCall(item)}>
+            <Text style={styles.buttonText}>Call</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.mapsButtons} >
           <Icon name="share-outline" size={20} color="gray" />
-          <Button style={styles.mapsButtons} title="Share" onPress={() => handleShare(item)} color="black"/>
+          <TouchableOpacity onPress={() => handleShare(item)}>
+            <Text style={styles.buttonText}>Share</Text>
+          </TouchableOpacity>
         </View>
         <Icon 
           onPress={() => navigation.navigate('CourtDetails', { ...item })}

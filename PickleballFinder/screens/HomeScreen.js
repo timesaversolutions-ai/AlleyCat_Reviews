@@ -43,6 +43,10 @@ const HomeScreen = ({ navigation }) => {
     getCourts();
   }, []);
 
+  const handleClearSearch = () => {
+    setSearch('');
+  };
+
   const CourtImagesCarousel = ({ images }) => {
     const width = Dimensions.get('window').width;
 
@@ -52,7 +56,7 @@ const HomeScreen = ({ navigation }) => {
                 loop
                 width={width}
                 height={width / 2}
-                // autoPlay={true}
+                // mode={'horizontal-stack'} 
                 data={images}
                 panGestureHandlerProps={{
                   activeOffsetX: [-10, 10],
@@ -95,11 +99,17 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.searchBar}>
         <Icon name="search" size={20} color="gray" style={{ paddingRight: 10 }} />
         <TextInput
-        placeholder="Search by name, city, etc."
-        value={search}
-        onChangeText={setSearch}
+          placeholder="Search by name, city, etc."
+          value={search}
+          onChangeText={setSearch}
+          style={{ flex: 1 }}
         />
-        <Icon name="filter" size={20} color="gray" style={{ marginLeft: 125 }} />
+        {search.length > 0 && (
+          <TouchableOpacity onPress={handleClearSearch}>
+            <Icon name="close-circle" size={20} color="gray" style={{ paddingRight: 10 }} />
+          </TouchableOpacity>
+        )}
+        <Icon name="filter" size={20} color="gray" style={{ paddingRight: 20 }} />
       </View>
       <Text style={styles.sectionHeader}>
         Explore Courts
