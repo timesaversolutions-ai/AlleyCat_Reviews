@@ -170,7 +170,43 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: 200, // Adjust the height as needed
     resizeMode: 'cover',
-  },  
+  },
+  input: {
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 10,
+    margin: 5,
+  },
+  button: {
+    width: '100%',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  buttonOutline: {
+    marginTop: 5,
+    backgroundColor: '#dedede',
+    borderRadius: 40,
+  },
+  buttonText: {
+    color: 'black',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  buttonOutlineText: {
+    color: '#0782F9',
+    fontWeight: '700',
+    fontSize: 16,
+  }
 });
 
 

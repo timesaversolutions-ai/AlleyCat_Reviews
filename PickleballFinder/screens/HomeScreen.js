@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TextInput, FlatList, Image, TouchableOpacity, Dimensions, Button } from 'react-native';
 import { fetchCourts } from '../api/googleSheets';
 import { fetchCourtImages } from '../api/googleDrive';
 import { styles } from '../styles/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Carousel from 'react-native-reanimated-carousel';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase'
 
 const HomeScreen = ({ navigation }) => {
   const [courts, setCourts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [user, setUser] = useState(null);
 
   const renderIcons = (num) => {
     const icons = [];
@@ -19,12 +22,21 @@ const HomeScreen = ({ navigation }) => {
     return icons;
   };
 
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.log('Logged out');
+      })
+      .catch(error => alert(error.message));
+  };
+
   useEffect(() => {
+    // Function to get courts
     const getCourts = async () => {
       try {
         const courtsData = await fetchCourts();
 
-        // Fetch images for each court using the Google Drive API
+        // Fetch images for each court using Google Drive API
         const courtsWithImages = await Promise.all(
           courtsData.map(async (court) => {
             const imageUris = await fetchCourtImages(court.Court);
@@ -40,7 +52,20 @@ const HomeScreen = ({ navigation }) => {
       }
     };
 
+    // Check authentication state
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        setUser(authUser); // User is logged in
+      } else {
+        setUser(null); // No user is logged in
+      }
+    });
+
+    // Fetch courts data
     getCourts();
+
+    // Clean up the auth state listener
+    return unsubscribe;
   }, []);
 
   const CourtImagesCarousel = ({ images }) => {
@@ -52,7 +77,6 @@ const HomeScreen = ({ navigation }) => {
                 loop
                 width={width}
                 height={width / 2}
-                // autoPlay={true}
                 data={images}
                 panGestureHandlerProps={{
                   activeOffsetX: [-10, 10],
@@ -104,6 +128,18 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.sectionHeader}>
         Explore Courts
       </Text>
+      <View>
+        {user ? (
+          <View>
+            <Text>Your email: {user.email}</Text>
+            <Button title="Sign Out" onPress={handleSignOut} />
+          </View>
+        ) : (
+          <View>
+            <Button title="Login/Signup" onPress={() => navigation.navigate('LoginScreen')} />
+          </View>
+        )}
+      </View>
       <FlatList
         data={filteredCourts}
         renderItem={({ item }) => (
