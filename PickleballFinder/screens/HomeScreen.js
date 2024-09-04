@@ -6,13 +6,15 @@ import { styles } from '../styles/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Carousel from 'react-native-reanimated-carousel';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase'
+import { auth } from '../firebase';
+import { addCourtToFavorites, removeCourtFromFavorites, getFavoriteCourts } from '../components/favorites';
 
 const HomeScreen = ({ navigation }) => {
   const [courts, setCourts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [user, setUser] = useState(null);
+  const [favoriteCourts, setFavoriteCourts] = useState([]);
 
   const renderIcons = (num) => {
     const icons = [];
@@ -50,6 +52,11 @@ const HomeScreen = ({ navigation }) => {
         console.error('Error fetching courts or images:', error);
         setLoading(false);
       }
+      if (user) {
+        const favorites = await getFavoriteCourts(user.uid);
+        setFavoriteCourts(favorites);
+      }
+      setLoading(false);
     };
 
     // Check authentication state
@@ -66,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
 
     // Clean up the auth state listener
     return unsubscribe;
-  }, []);
+  }, [user]);
 
   const CourtImagesCarousel = ({ images }) => {
     const width = Dimensions.get('window').width;
@@ -92,7 +99,7 @@ const HomeScreen = ({ navigation }) => {
                     >
                         <Image 
                             source={{ uri: item }} 
-                            style={{ width: '100%', height: '100%', borderRadius: 10 }} 
+                            style={{ width: '90%', height: '100%', borderRadius: 10 }} 
                             resizeMode="cover"
                         />
                     </View>
@@ -107,7 +114,34 @@ const HomeScreen = ({ navigation }) => {
     court.City?.toLowerCase().includes(search.toLowerCase()) ||
     court.State?.toLowerCase().includes(search.toLowerCase())
   );
+
+    // Check if the court is already in the user's favorites
+  const checkIfFavorite = (court, favoriteCourts) => {
+    return favoriteCourts.some(favorite => favorite.courtId === court.Court);
+  };
+
   
+  const renderFavoriteButton = (court) => {
+    const isFavorite = checkIfFavorite(court, favoriteCourts);
+
+    return (
+      <Button
+        title={isFavorite ? 'Unfavorite' : 'Favorite'}
+        onPress={() => {
+          if (isFavorite) {
+            // Find the favorite ID to remove it
+            const favoriteToRemove = favoriteCourts.find(fav => fav.courtId === court.Court);
+            removeCourtFromFavorites(favoriteToRemove.id);
+          } else {
+            addCourtToFavorites(user.uid, court);
+          }
+
+          // Refresh favorite courts
+          getFavoriteCourts(user.uid).then(setFavoriteCourts);
+        }}
+      />
+    );
+  };
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -123,7 +157,7 @@ const HomeScreen = ({ navigation }) => {
         value={search}
         onChangeText={setSearch}
         />
-        <Icon name="filter" size={20} color="gray" style={{ marginLeft: 125 }} />
+        <Icon name="filter" size={20} color="gray" style={{ right: 50, position: 'absolute' }} />
       </View>
       <Text style={styles.sectionHeader}>
         Explore Courts
@@ -158,6 +192,7 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.courtName}>
                 {item.Court}
               </Text>
+              {user ? ( <View>{renderFavoriteButton(item)}</View> ) : ( <Button title="Login to Favorite" onPress={() => navigation.navigate('LoginScreen')} /> )}
               <View style={styles.iconContainer}>
                 {renderIcons(Number(item['AlleyCat Score']) || 0)}
               </View>
