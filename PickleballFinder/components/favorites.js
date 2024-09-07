@@ -11,7 +11,7 @@ export const addCourtToFavorites = async (userId, court) => {
       state: court.State,
     //   dateAdded: new Date(),
     });
-    console.log('Court added to favorites!');
+    alert('Court added to favorites!');
   } catch (error) {
     console.error('Error adding court to favorites: ', error);
   }
@@ -20,7 +20,7 @@ export const addCourtToFavorites = async (userId, court) => {
 export const removeCourtFromFavorites = async (favoriteId) => {
   try {
     await deleteDoc(doc(db, 'favorites', favoriteId));
-    console.log('Court removed from favorites!');
+    alert('Court removed from favorites!');
   } catch (error) {
     console.error('Error removing court from favorites: ', error);
   }

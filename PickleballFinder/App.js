@@ -8,7 +8,7 @@ import MapsScreen from './screens/MapsScreen';
 import CourtDetailsScreen from './screens/CourtDetailsScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import LoginScreen from './screens/LoginScreen';
-import { auth, onAuthStateChanged } from './firebase'; // Import Firebase auth
+import { auth, onAuthStateChanged } from './firebase';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
