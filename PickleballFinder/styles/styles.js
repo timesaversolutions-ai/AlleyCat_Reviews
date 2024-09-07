@@ -206,52 +206,31 @@ export const styles = StyleSheet.create({
     color: '#0782F9',
     fontWeight: '700',
     fontSize: 16,
-  }
+  },
+  commentInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+    fontSize: 16,
+  },
+  
+  // Style for the container holding each comment
+  commentContainer: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    backgroundColor: '#fff',
+    marginVertical: 5,
+    borderRadius: 5,
+  },
+  
+  // Style for the author's name in each comment
+  commentAuthor: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#333',
+    fontSize: 14,
+  },
 });
-
-
-// export const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 20,
-//   },
-  // searchBar: {
-  //   height: 40,
-  //   borderColor: 'gray',
-  //   borderWidth: 1,
-  //   borderRadius: 5,
-  //   marginBottom: 20,
-  //   paddingLeft: 10,
-  // },
-  // courtItem: {
-  //   padding: 10,
-  //   borderBottomColor: 'gray',
-  //   borderBottomWidth: 1,
-  // },
-  // courtImage: {
-  //   width: '100%',
-  //   height: 200,
-  //   marginBottom: 10,
-  // },
-  // placeholderImage: {
-  //   width: '100%',
-  //   height: 200,
-  //   marginBottom: 10,
-  //   backgroundColor: 'gray',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // placeholderText: {
-  //   color: 'white',
-  // },
-//   detailText: {
-//     fontSize: 16,
-//     marginBottom: 10,
-//   },
-  // detailHeader: {
-  //   fontSize: 18,
-  //   fontWeight: 'bold',
-  //   marginTop: 12,
-  //   marginBottom: 3,
-  // },
-// });
