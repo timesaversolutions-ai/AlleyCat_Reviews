@@ -1,8 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, Image, Button, Linking, Share, Dimensions } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, Image, Button, Linking, Share, Dimensions, ScrollView, Keyboard } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { fetchCourts } from '../api/googleSheets';
 import { fetchCourtImages } from '../api/googleDrive';
+import { findPlace } from '../api/googleMaps';
 import { styles } from '../styles/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Carousel from 'react-native-reanimated-carousel';
@@ -11,9 +12,12 @@ const MapsScreen = ({ navigation }) => {
   const [courts, setCourts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState({
+  const [suggestions, setSuggestions] = useState([]);
+  const [region, setRegion] = useState({
     latitude: 37.7749, // Default latitude (San Francisco)
     longitude: -122.4194, // Default longitude (San Francisco)
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
   });
 
   useEffect(() => {
@@ -40,36 +44,21 @@ const MapsScreen = ({ navigation }) => {
     getCourts();
   }, []);
 
-  const CourtImagesCarousel = memo(({ images, isVertical = false }) => {
+  const CourtImagesCarousel = memo(({ images }) => {
     const width = Dimensions.get('window').width;
-    const baseOptions = isVertical
-      ? {
-          vertical: true,
-          width: width,
-          height: width / 4,
-          style: {
-              width: width
-          },
-      }
-      : {
-          vertical: false,
-          width: width / 3,
-          height: width / 4,
-          style: {
-              width: width
-          },
-      };
 
     return (
       <View style={{ flex: 1 }}>
           <Carousel
               loop
-              {...baseOptions}
+              width={width / 3}
+              height={width / 4}
+              style={{ width: width }}
               data={images}
               panGestureHandlerProps={{
                   activeOffsetX: [-10, 10],
               }}
-              scrollAnimationDuration={250}
+              scrollAnimationDuration={0}
               renderItem={({ item }) => (
                   <View
                       style={{
@@ -118,15 +107,21 @@ const MapsScreen = ({ navigation }) => {
       <View style={styles.mapsButtonContainer}>
         <View style={styles.mapsButtons} >
           <Icon name="arrow-redo-circle-outline" size={20} color="gray" />
-          <Button title="Directions" onPress={() => handleDirections(item)} color="black" />
+          <TouchableOpacity onPress={() => handleDirections(item)}>
+            <Text style={styles.buttonText}>Directions</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.mapsButtons} >
           <Icon name="call-outline" size={20} color="gray" />
-          <Button style={styles.mapsButtons} title="Call" onPress={() => handleCall(item)} color="black" />
+          <TouchableOpacity onPress={() => handleCall(item)}>
+            <Text style={styles.buttonText}>Call</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.mapsButtons} >
           <Icon name="share-outline" size={20} color="gray" />
-          <Button style={styles.mapsButtons} title="Share" onPress={() => handleShare(item)} color="black"/>
+          <TouchableOpacity onPress={() => handleShare(item)}>
+            <Text style={styles.buttonText}>Share</Text>
+          </TouchableOpacity>
         </View>
         <Icon 
           onPress={() => navigation.navigate('CourtDetails', { ...item })}
@@ -134,7 +129,7 @@ const MapsScreen = ({ navigation }) => {
         />
       </View>
     </View>
-  ), (prevProps, nextProps) => prevProps.item.images === nextProps.item.images);  
+  ), (prevProps, nextProps) => prevProps.item === nextProps.item);
 
   const filteredCourts = courts.filter(court =>
     court.Court?.toLowerCase().includes(search.toLowerCase()) ||
@@ -151,10 +146,57 @@ const MapsScreen = ({ navigation }) => {
   };
 
   const handleCourtSelect = (court) => {
-    setSelectedLocation({
+    setRegion({
       latitude: parseFloat(court.Latitude),
       longitude: parseFloat(court.Longitude),
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
     });
+  };
+
+  const handleSearchChange = (text) => {
+    setSearch(text);
+
+    // Filter courts based on the search text
+    const filtered = courts.filter(court =>
+      court.Court?.toLowerCase().includes(text.toLowerCase()) ||
+      court.City?.toLowerCase().includes(text.toLowerCase()) ||
+      court.State?.toLowerCase().includes(text.toLowerCase())
+    );
+
+    setSuggestions(filtered);
+  };
+
+  const handleSuggestionSelect = async (court) => {
+    setSearch(court.Court);
+    setSuggestions([]);
+
+    const location = await findPlace(`${court.Court}, ${court.City}, ${court.State}`);
+    if (location) {
+      setRegion({
+        ...location,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
+  };
+
+  const handleSearch = async () => {
+    if (search) {
+      const location = await findPlace(search);
+      if (location) {
+        setRegion({
+          ...location,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+      }
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearch('');
+    setSuggestions([]);
   };
 
   const handleDirections = (court) => {
@@ -182,35 +224,68 @@ const MapsScreen = ({ navigation }) => {
       <View style={styles.searchBar}>
         <Icon name="search" size={20} color="gray" style={{ paddingRight: 10 }} />
         <TextInput
-        placeholder="Search by name, city, etc."
-        value={search}
-        onChangeText={setSearch}
+          placeholder="Search by name, city, etc."
+          value={search}
+          onChangeText={handleSearchChange}
+          onSubmitEditing={handleSearch}
+          style={{ flex: 1 }}
         />
-        <Icon name="filter" size={20} color="gray" style={{ marginLeft: 125 }} />
+        {search.length > 0 && (
+          <TouchableOpacity onPress={handleClearSearch}>
+            <Icon name="close-circle" size={20} color="gray" style={{ paddingRight: 10 }} />
+          </TouchableOpacity>
+        )}
+        <Icon name="filter" size={20} color="gray" style={{ paddingRight: 20 }} />
       </View>
+
+      {suggestions.length > 0 && (
+        <ScrollView 
+          style={styles.suggestionsContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          {suggestions.map((court, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.suggestionItem}
+              onPress={() => {
+                Keyboard.dismiss();
+                handleSuggestionSelect(court);
+                handleCourtSelect(court);
+              }}
+            >
+              <Text>{court.Court} - {court.City}, {court.State}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
-          region={{
-            latitude: selectedLocation.latitude,
-            longitude: selectedLocation.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
+          region={region}
         >
-          <Marker coordinate={selectedLocation} />
+          {courts.map((court, index) => (
+            <Marker
+              key={index}
+              coordinate={{
+                latitude: parseFloat(court.Latitude),
+                longitude: parseFloat(court.Longitude),
+              }}
+              title={court.Court}
+              description={`${court.City}, ${court.State}`}
+              onPress={() => handleCourtSelect(court)}
+            />
+          ))}
         </MapView>
       </View>
       <FlatList
         ref={(ref) => { this.flatListRef = ref; }}
-        initialNumToRender={7}
+        initialNumToRender={10}
         data={filteredCourts}
         renderItem={({ item }) => (
           <CourtListItem item={item} onSelect={handleCourtSelect} />
         )}
         keyExtractor={(item, index) => index.toString()}
       />
-
     </View>
   );
 };
