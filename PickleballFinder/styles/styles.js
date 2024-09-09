@@ -110,7 +110,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   mapsButtons: {
-    padding: 10,
+    padding: 5,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 35,
@@ -141,6 +141,8 @@ export const styles = StyleSheet.create({
   ratingDisplay: {
     size: 10,
     flexDirection: 'row',
+    top: 10,
+    right: 10,
   },
   detailsSection1: {
     borderWidth: 1,
@@ -169,74 +171,66 @@ export const styles = StyleSheet.create({
     height: 200, // Adjust the height as needed
     resizeMode: 'cover',
   },
-  suggestionsContainer: {
+  input: {
     backgroundColor: 'white',
-    position: 'absolute',
-    top: 100, // Adjust based on the position of your search bar
-    left: 10,
-    right: 10,
-    zIndex: 1000, // Ensure it appears above other components
-    maxHeight: 200, // Limit the height of the suggestion box
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 10,
+    margin: 5,
   },
-  suggestionItem: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+  button: {
+    width: '100%',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  buttonOutline: {
+    marginTop: 5,
+    backgroundColor: '#dedede',
+    borderRadius: 40,
   },
   buttonText: {
+    color: 'black',
+    fontWeight: '700',
     fontSize: 16,
-    textAlign: 'center',
+  },
+  buttonOutlineText: {
+    color: '#0782F9',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  commentInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+    fontSize: 16,
+  },
+  
+  // Style for the container holding each comment
+  commentContainer: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    backgroundColor: '#fff',
+    marginVertical: 5,
+    borderRadius: 5,
+  },
+  
+  // Style for the author's name in each comment
+  commentAuthor: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#333',
+    fontSize: 14,
   },
 });
-
-
-// export const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 20,
-//   },
-  // searchBar: {
-  //   height: 40,
-  //   borderColor: 'gray',
-  //   borderWidth: 1,
-  //   borderRadius: 5,
-  //   marginBottom: 20,
-  //   paddingLeft: 10,
-  // },
-  // courtItem: {
-  //   padding: 10,
-  //   borderBottomColor: 'gray',
-  //   borderBottomWidth: 1,
-  // },
-  // courtImage: {
-  //   width: '100%',
-  //   height: 200,
-  //   marginBottom: 10,
-  // },
-  // placeholderImage: {
-  //   width: '100%',
-  //   height: 200,
-  //   marginBottom: 10,
-  //   backgroundColor: 'gray',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // placeholderText: {
-  //   color: 'white',
-  // },
-//   detailText: {
-//     fontSize: 16,
-//     marginBottom: 10,
-//   },
-  // detailHeader: {
-  //   fontSize: 18,
-  //   fontWeight: 'bold',
-  //   marginTop: 12,
-  //   marginBottom: 3,
-  // },
-// });

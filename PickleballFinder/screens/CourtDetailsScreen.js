@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, Button, TouchableOpacity, Linking, Dimensions } from 'react-native';
+import { View, Text, TextInput, ScrollView, Image, Button, TouchableOpacity, Linking, Dimensions, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../styles/styles';
 import Carousel from 'react-native-reanimated-carousel';
+import { addComment, getComments } from '../components/comments'; // Import comment operations
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const CourtDetailsScreen = ({ route, navigation }) => {
   const {
@@ -27,6 +30,53 @@ const CourtDetailsScreen = ({ route, navigation }) => {
   
   // hide hours
   const [hoursVisible, setHoursVisible] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Fetch comments when the screen loads
+    const fetchCourtComments = async () => {
+      const courtComments = await getComments(Court);
+      setComments(courtComments);
+    };
+    
+    fetchCourtComments();
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        setUser(authUser);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return unsubscribe;
+  }, [user]);
+
+  const handleAddComment = async () => {
+    if (newComment.trim()) {
+      const user = auth.currentUser;
+      if (user) {
+        await addComment(Court, user.uid, user.email, newComment); // Assuming you store username as email
+        setNewComment(''); // Clear the input
+        const updatedComments = await getComments(Court); // Refresh comments
+        setComments(updatedComments);
+      } else {
+        alert('You must be logged in to post a comment.');
+      }
+    }
+  };
+
+  // Render comment list
+  const renderComments = () => {
+    return comments.map((comment) => (
+      <View key={comment.id} style={styles.commentContainer}>
+        <Text style={styles.commentAuthor}>{comment.userEmail}:</Text>
+        <Text>{comment.content}</Text>
+      </View>
+    ));
+  };
+
 
   const CourtImagesCarousel = ({ images }) => {
     const width = Dimensions.get('window').width;
@@ -202,6 +252,21 @@ const CourtDetailsScreen = ({ route, navigation }) => {
         {renderIcons(Number(alleyCatScore))}
       </View>
 
+      <Text style={styles.detailHeader}>Comments</Text>
+      <View>
+        {comments.length > 0 ? renderComments() : <Text>No comments yet.</Text>}
+      </View>
+      <KeyboardAvoidingView style={styles.container}>
+        <TextInput
+          style={styles.commentInput}
+          placeholder="Add a comment..."
+          value={newComment}
+          onChangeText={setNewComment}
+        />
+        <Button title="Submit Comment" onPress={handleAddComment} />
+
+        <View style={{ margin: 40 }}></View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
