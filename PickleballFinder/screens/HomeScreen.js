@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, Image, TouchableOpacity, Dimensions, Button } from 'react-native';
 import { fetchCourts } from '../api/googleSheets';
-import { fetchCourtImages } from '../api/googleDrive';
+import { fetchCourtImages } from '../components/storage';
 import { styles } from '../styles/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Carousel from 'react-native-reanimated-carousel';
