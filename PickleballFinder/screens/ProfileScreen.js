@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, Button, TouchableOpacity, FlatList } from 'react-native';
 import { styles } from '../styles/styles';
-import { triggerWatchFolder } from '../api/googleApps';
+import { watchFolder } from '../api/processAudio';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { getFavoriteCourts } from '../components/favorites';
@@ -28,7 +28,7 @@ const ProfileScreen = () => {
 
   const handlePress = async () => {
     try {
-      await triggerWatchFolder();
+      await watchFolder();
       setReloadKey(prevKey => prevKey + 1); // Force re-fetch of favorite courts
     } catch (error) {
       console.error('Error:', error);
