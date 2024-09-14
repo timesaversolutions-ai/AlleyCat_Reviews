@@ -22,10 +22,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "scheme": "myauthapp",
-    "plugins": [
-      "expo-secure-store"
-    ]
+    }
   }
 }
