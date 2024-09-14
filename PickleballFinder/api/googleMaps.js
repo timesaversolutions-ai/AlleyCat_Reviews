@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { gdrive_API_KEY } from '../config';
+import { gdrive_API_KEY } from '@env';
 
 export const findPlace = async (query) => {
   const findPlaceUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json`;

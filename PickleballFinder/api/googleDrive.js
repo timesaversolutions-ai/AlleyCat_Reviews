@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { gdrive_API_KEY } from '../config';
+import { gdrive_API_KEY } from '@env';
 
 const FOLDER_ID = '1uDBqazHuPyRuC_RLWUJd24kVkNu9-cAw';
 

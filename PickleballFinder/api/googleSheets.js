@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { gdrive_API_KEY } from '../config';
+import { gdrive_API_KEY } from '@env';
 
 const SHEET_ID = '1YYj8oqUT0dlJrXOC1PeYj06knozwTMD8ASO0EuZ58fs';
 const BASE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1?key=${gdrive_API_KEY}`;
