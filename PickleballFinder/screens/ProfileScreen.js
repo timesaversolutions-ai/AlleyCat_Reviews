@@ -6,6 +6,8 @@ import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { getFavoriteCourts } from '../components/favorites';
 
+const DEV_MODE = true; // Set this to false for production
+
 const ProfileScreen = () => {
   const [reloadKey, setReloadKey] = useState(0);
   const [favoriteCourts, setFavoriteCourts] = useState([]);
@@ -13,12 +15,20 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchFavoriteCourts = async () => {
       if (auth.currentUser) {
-        try {
-          const userId = auth.currentUser.uid; // Get the current user's ID
-          const courts = await getFavoriteCourts(userId);
-          setFavoriteCourts(courts); // Store favorite courts in state
-        } catch (error) {
-          console.error('Error fetching favorite courts:', error);
+        if (DEV_MODE) {
+          // Use mock data for favorites in dev mode
+          setFavoriteCourts([
+            { id: '1', courtName: 'Mock Favorite 1', city: 'Mock City', state: 'MS' },
+            { id: '2', courtName: 'Mock Favorite 2', city: 'Mock City', state: 'MS' },
+          ]);
+        } else {
+          try {
+            const userId = auth.currentUser.uid; // Get the current user's ID
+            const courts = await getFavoriteCourts(userId);
+            setFavoriteCourts(courts); // Store favorite courts in state
+          } catch (error) {
+            console.error('Error fetching favorite courts:', error);
+          }
         }
       }
     };

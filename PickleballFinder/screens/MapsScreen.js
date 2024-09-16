@@ -65,12 +65,17 @@ const MapsScreen = ({ navigation }) => {
                           flex: 1,
                           justifyContent: 'center',
                           alignItems: 'center',
-                          paddingHorizontal: 5,
+                          paddingVertical: 10,
                       }}
                   >
                       <Image
                           source={{ uri: item }}
-                          style={{ width: '100%', height: '100%', borderRadius: 10 }}
+                          style={{
+                              width: '95%',
+                              height: '100%',
+                              borderRadius: 10,
+                              marginHorizontal: 5,
+                          }}
                           resizeMode="cover"
                       />
                   </View>
@@ -282,7 +287,7 @@ const MapsScreen = ({ navigation }) => {
         initialNumToRender={10}
         data={filteredCourts}
         renderItem={({ item }) => (
-          <CourtListItem item={item} onSelect={handleCourtSelect} />
+          <CourtListItem item={item} onSelect={() => navigation.navigate('CourtDetails', { ...item })} />
         )}
         keyExtractor={(item, index) => index.toString()}
       />

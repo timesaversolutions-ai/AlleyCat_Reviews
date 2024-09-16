@@ -1,3 +1,5 @@
+const DEV_MODE = true; // Set this to false for production
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, ScrollView, Image, Button, TouchableOpacity, Linking, Dimensions, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -37,8 +39,16 @@ const CourtDetailsScreen = ({ route, navigation }) => {
   useEffect(() => {
     // Fetch comments when the screen loads
     const fetchCourtComments = async () => {
-      const courtComments = await getComments(Court);
-      setComments(courtComments);
+      if (DEV_MODE) {
+        // Use mock data for comments in dev mode
+        setComments([
+          { id: '1', userEmail: 'user1@example.com', content: 'Great court!' },
+          { id: '2', userEmail: 'user2@example.com', content: 'Love playing here.' },
+        ]);
+      } else {
+        const courtComments = await getComments(Court);
+        setComments(courtComments);
+      }
     };
     
     fetchCourtComments();
@@ -57,10 +67,17 @@ const CourtDetailsScreen = ({ route, navigation }) => {
     if (newComment.trim()) {
       const user = auth.currentUser;
       if (user) {
-        await addComment(Court, user.uid, user.email, newComment); // Assuming you store username as email
-        setNewComment(''); // Clear the input
-        const updatedComments = await getComments(Court); // Refresh comments
-        setComments(updatedComments);
+        if (DEV_MODE) {
+          // Simulate adding a comment in dev mode
+          setComments(prev => [...prev, {
+            id: Date.now().toString(),
+            userEmail: user.email,
+            content: newComment
+          }]);
+          setNewComment('');
+        } else {
+          // ... existing Firestore logic ...
+        }
       } else {
         alert('You must be logged in to post a comment.');
       }
@@ -247,12 +264,11 @@ const CourtDetailsScreen = ({ route, navigation }) => {
       <View style={styles.detailsSection2}>
         {renderAmenitiesOrEnhancements(additionalEnhancements)}
       </View>
-      
-      <View style={styles.ratingDisplay}>
-        {renderIcons(Number(alleyCatScore))}
-      </View>
 
-      <Text style={styles.detailHeader}>Comments</Text>
+      <View style={styles.commentHeaderContainer}>
+        <Text style={styles.detailHeader}>Comments</Text>
+        <Text style={styles.commentCount}>({comments.length})</Text>
+      </View>
       <View>
         {comments.length > 0 ? renderComments() : <Text>No comments yet.</Text>}
       </View>

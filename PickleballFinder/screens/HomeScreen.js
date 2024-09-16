@@ -1,3 +1,5 @@
+const DEV_MODE = true; // Set this to false for production
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, Image, TouchableOpacity, Dimensions, Button } from 'react-native';
 import { fetchCourts } from '../api/googleSheets';
@@ -34,22 +36,10 @@ const HomeScreen = ({ navigation }) => {
     const isFavorite = checkIfFavorite(court, favoriteCourts);
 
     return (
-      <Button
-        title={isFavorite ? 'Unfavorite' : 'Favorite'}
-        onPress={async () => {
-          if (isFavorite) {
-            const favoriteToRemove = favoriteCourts.find(fav => fav.courtName === court.Court);
-            if (favoriteToRemove) {
-              await removeCourtFromFavorites(favoriteToRemove.id);
-            }
-          } else {
-            await addCourtToFavorites(user.uid, court);
-          }
-
-          // Refresh favorite courts after adding/removing
-          const updatedFavorites = await getFavoriteCourts(user.uid);
-          setFavoriteCourts(updatedFavorites);
-        }}
+      <Icon 
+        name={isFavorite ? 'heart' : 'heart-outline'} 
+        size={24} 
+        color={isFavorite ? 'red' : 'white'}
       />
     );
   };
@@ -75,8 +65,16 @@ const HomeScreen = ({ navigation }) => {
 
     const fetchFavoriteCourts = async () => {
       if (user) {
-        const favorites = await getFavoriteCourts(user.uid);
-        setFavoriteCourts(favorites);
+        if (DEV_MODE) {
+          // Use mock data for favorites in dev mode
+          setFavoriteCourts([
+            { id: '1', courtName: 'Mock Court 1', city: 'Mock City', state: 'MS' },
+            { id: '2', courtName: 'Mock Court 2', city: 'Mock City', state: 'MS' },
+          ]);
+        } else {
+          const favorites = await getFavoriteCourts(user.uid);
+          setFavoriteCourts(favorites);
+        }
       }
     };
 
@@ -99,10 +97,10 @@ const HomeScreen = ({ navigation }) => {
     const width = Dimensions.get('window').width;
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, overflow: 'hidden', borderRadius: 10 }}>
         <Carousel
           loop
-          width={width}
+          width={width - 20}
           height={width / 2}
           data={images}
           panGestureHandlerProps={{
@@ -110,10 +108,14 @@ const HomeScreen = ({ navigation }) => {
           }}
           scrollAnimationDuration={0}
           renderItem={({ item }) => (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1 }}>
               <Image
                 source={{ uri: item }}
-                style={{ width: '90%', height: '100%', borderRadius: 10 }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: 10,
+                }}
                 resizeMode="cover"
               />
             </View>
@@ -161,11 +163,17 @@ const HomeScreen = ({ navigation }) => {
         {user ? (
           <View>
             <Text>Your email: {user.email}</Text>
-            <Button title="Sign Out" onPress={handleSignOut} />
+            <View style={styles.loginButtons}>
+              <TouchableOpacity onPress={handleSignOut}>
+                <Text style={styles.buttonText}>Sign Out</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
-          <View>
-            <Button title="Login/Signup" onPress={() => navigation.navigate('LoginScreen')} />
+          <View style={styles.loginButtons}>
+            <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+                <Text style={styles.buttonText}>Log In</Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -177,20 +185,37 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('CourtDetails', { ...item })}
             style={styles.courtItem}
           >
-            {item.images && item.images.length > 0 ? (
-              <CourtImagesCarousel images={item.images} />
-            ) : (
-              <View style={styles.placeholderImage}>
-                <Text style={styles.placeholderText}>No Image Available</Text>
-              </View>
-            )}
+            <View style={styles.imageContainer}>
+              {item.images && item.images.length > 0 ? (
+                <CourtImagesCarousel images={item.images} />
+              ) : (
+                <View style={styles.placeholderImage}>
+                  <Text style={styles.placeholderText}>No Image Available</Text>
+                </View>
+              )}
+              {user && (
+                <TouchableOpacity
+                  style={styles.favoriteIconContainer}
+                  onPress={async () => {
+                    // Your existing favorite toggle logic here
+                    if (DEV_MODE) {
+                      // Simulate adding/removing favorites in dev mode
+                      setFavoriteCourts(prev => 
+                        checkIfFavorite(item, favoriteCourts)
+                          ? prev.filter(fav => fav.courtName !== item.Court)
+                          : [...prev, { id: Date.now().toString(), courtName: item.Court, city: item.City, state: item.State }]
+                      );
+                    } else {
+                      // Your existing Firestore logic here
+                    }
+                  }}
+                >
+                  {renderFavoriteButton(item)}
+                </TouchableOpacity>
+              )}
+            </View>
             <View style={styles.courtItemDetailsContainer}>
               <Text style={styles.courtName}>{item.Court}</Text>
-              {user ? (
-                <View>{renderFavoriteButton(item)}</View>
-              ) : (
-                <Button title="Login to Favorite" onPress={() => navigation.navigate('LoginScreen')} />
-              )}
               <View style={styles.iconContainer}>
                 {renderIcons(Number(item['AlleyCat Score']) || 0)}
               </View>

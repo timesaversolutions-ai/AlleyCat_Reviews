@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   courtItem: {
-    padding: 10,
+    // marginTop: 10,
   },
   homeScreenCourtImage: {
     width: '100%',
@@ -28,11 +28,9 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
   },
   mapsScreenCourtImage: {
-    width: '25%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    height: '25%',
-    borderRadius: 25,
+    width: '100%',  // Change this to full width
+    height: 150,    // Adjust this height as needed
+    borderRadius: 10,
   },
   placeholderImage: {
     width: '100%',
@@ -63,7 +61,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 1,
     marginBottom: 3,
-    paddingBottom: 15,
+    paddingBottom: 5, // Reduce this value from 15 to 5
   },
   detailText: {
     fontSize: 16,
@@ -98,6 +96,7 @@ export const styles = StyleSheet.create({
   },
   mapContainer: {
     height: '50%',
+    paddingHorizontal: 5,
   },
   map: {
     width: '100%',
@@ -110,11 +109,21 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   mapsButtons: {
-    padding: 5,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 35,
     backgroundColor: '#dedede',
+  },
+  loginButtons: {
+    padding: 10,
+    width: '35%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 35,
+    backgroundColor: '#dedede',
+    marginBottom: 15,
   },
   courtItemDetailsContainer: {
     // flexDirection: 'row',
@@ -148,6 +157,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 10,
+    marginVertical: 10,
     borderRadius: 5,
   },
   detailsSection2: {
@@ -199,7 +209,7 @@ export const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'black',
-    fontWeight: '700',
+    // fontWeight: '700',
     fontSize: 16,
   },
   buttonOutlineText: {
@@ -232,5 +242,26 @@ export const styles = StyleSheet.create({
     marginBottom: 5,
     color: '#333',
     fontSize: 14,
+  },
+  imageContainer: {
+    position: 'relative',
+  },
+  favoriteIconContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 15,
+    padding: 5,
+  },
+  commentHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  commentCount: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#666',
   },
 });
