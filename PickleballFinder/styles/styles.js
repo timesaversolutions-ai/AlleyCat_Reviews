@@ -28,8 +28,8 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
   },
   mapsScreenCourtImage: {
-    width: '100%',  // Change this to full width
-    height: 150,    // Adjust this height as needed
+    width: '100%',
+    height: 150,
     borderRadius: 10,
   },
   placeholderImage: {
@@ -39,6 +39,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 10,
   },
   placeholderText: {
     color: 'white',
